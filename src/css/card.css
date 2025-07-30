@@ -1,0 +1,10 @@
+.card.empty {
+  width: var(--card-width);
+  height: var(--card-height);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 90px;
+  font-size: 24px;
+  color: #bbb;
+}
