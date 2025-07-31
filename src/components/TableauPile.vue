@@ -9,13 +9,9 @@ defineProps<{
 
 <template>
   <div class="pile">
-    <Card
-      v-for="card in cards"
-      :key="card.id"
-      :value="card.value"
-      :suit="card.suit"
-      :face-up="card.faceUp"
-    />
+    <div class="card-container" v-for="card in cards" :key="card.id">
+      <Card :value="card.value" :suit="card.suit" :face-up="card.faceUp" />
+    </div>
   </div>
 </template>
 
@@ -23,6 +19,12 @@ defineProps<{
 .pile {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+}
+
+.card-container {
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+  margin-bottom: -70px; /* Overlap cards */
 }
 </style>
