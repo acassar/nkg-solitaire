@@ -1,20 +1,18 @@
 <script setup lang="ts">
+import type { Suit } from '@/models/Card'
+
 defineProps<{
   value?: number
-  suit?: string
+  suit?: Suit
   faceUp: boolean
   canBeClicked?: boolean
 }>()
 
-function getSuitSymbol(suit: string): string {
-  return (
-    {
-      hearts: '♥',
-      diamonds: '♦',
-      clubs: '♣',
-      spades: '♠',
-    }[suit] || '?'
-  )
+const suitStyles: Record<Suit, { icon: string }> = {
+  spades: { icon: '🗡️' },
+  hearts: { icon: '❤️' },
+  diamonds: { icon: '💎' },
+  clubs: { icon: '🍀' },
 }
 </script>
 
@@ -23,7 +21,17 @@ function getSuitSymbol(suit: string): string {
     :class="['card', { faceUp, faceDown: !faceUp }, { canBeClicked: canBeClicked }]"
     @click="canBeClicked ? $emit('click') : null"
   >
-    <template v-if="faceUp"> {{ value }} {{ getSuitSymbol(suit ?? '') }} </template>
+    <template v-if="faceUp">
+      <div class="row">
+        <div class="value">{{ value }}</div>
+        <div>{{ suitStyles[suit!].icon }}</div>
+      </div>
+
+      <div class="row bottom-right">
+        <div class="value">{{ value }}</div>
+        <div>{{ suitStyles[suit!].icon }}</div>
+      </div>
+    </template>
     <template v-else> 🂠 </template>
   </div>
 </template>
@@ -35,11 +43,12 @@ function getSuitSymbol(suit: string): string {
   border: 1px solid #aaa;
   border-radius: 4px;
   background-color: white;
-  text-align: center;
-  line-height: var(--card-height);
   font-weight: bold;
   font-size: 18px;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .canBeClicked:hover {
@@ -53,6 +62,27 @@ function getSuitSymbol(suit: string): string {
 }
 .faceUp {
   background-color: white;
-  color: black;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+}
+
+.bottom-right {
+  transform: rotate(180deg);
+}
+
+.value {
+  font-size: 16px;
+  font-weight: bold;
+  font-family:
+    'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.icon {
+  font-size: 12px;
 }
 </style>
