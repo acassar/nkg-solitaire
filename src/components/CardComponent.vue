@@ -3,6 +3,7 @@ defineProps<{
   value?: number
   suit?: string
   faceUp: boolean
+  canBeClicked?: boolean
 }>()
 
 function getSuitSymbol(suit: string): string {
@@ -18,7 +19,10 @@ function getSuitSymbol(suit: string): string {
 </script>
 
 <template>
-  <div :class="['card', { faceUp, faceDown: !faceUp }]">
+  <div
+    :class="['card', { faceUp, faceDown: !faceUp }, { canBeClicked: canBeClicked }]"
+    @click="canBeClicked ? $emit('click') : null"
+  >
     <template v-if="faceUp"> {{ value }} {{ getSuitSymbol(suit ?? '') }} </template>
     <template v-else> 🂠 </template>
   </div>
@@ -37,6 +41,12 @@ function getSuitSymbol(suit: string): string {
   font-size: 18px;
   user-select: none;
 }
+
+.canBeClicked:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
 .faceDown {
   background-color: #444;
   color: transparent;

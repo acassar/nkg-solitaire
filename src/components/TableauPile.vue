@@ -10,7 +10,12 @@ defineProps<{
 <template>
   <div class="pile">
     <div class="card-container" v-for="card in cards" :key="card.id">
-      <Card :value="card.value" :suit="card.suit" :face-up="card.faceUp" />
+      <Card
+        :value="card.value"
+        :suit="card.suit"
+        :face-up="card.faceUp"
+        :can-be-clicked="card.faceUp"
+      />
     </div>
   </div>
 </template>
