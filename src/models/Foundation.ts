@@ -1,6 +1,3 @@
-import type { Card } from './Card'
-import type { Pile } from './Pile'
+import { Pile } from './Pile'
 
-export interface Foundation extends Pile {
-  cards: Card[]
-}
+export class Foundation extends Pile {}

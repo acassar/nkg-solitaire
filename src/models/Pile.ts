@@ -1,11 +1,25 @@
 import type { Card } from './Card'
 
-export interface Pile {
+export class Pile {
   cards: Card[]
 
-  addCard(card: Card): void
+  constructor(cards: Card[] = []) {
+    this.cards = cards
+  }
 
-  removeCard(cardId: string): Card | undefined
+  addCard(card: Card) {
+    this.cards.push(card)
+  }
 
-  isEmpty(): boolean
+  removeCard(cardId: string): Card | undefined {
+    const index = this.cards.findIndex((card) => card.id === cardId)
+    if (index !== -1) {
+      return this.cards.splice(index, 1)[0]
+    }
+    return undefined
+  }
+
+  isEmpty(): boolean {
+    return this.cards.length === 0
+  }
 }

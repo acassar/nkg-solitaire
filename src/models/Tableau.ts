@@ -1,26 +1,3 @@
-import type { Card } from './Card'
-import type { Pile } from './Pile'
+import { Pile } from './Pile'
 
-export class Tableau implements Pile {
-  cards: Card[]
-
-  constructor(cards: Card[] = []) {
-    this.cards = cards
-  }
-
-  addCard(card: Card) {
-    this.cards.push(card)
-  }
-
-  removeCard(cardId: string): Card | undefined {
-    const index = this.cards.findIndex((card) => card.id === cardId)
-    if (index !== -1) {
-      return this.cards.splice(index, 1)[0]
-    }
-    return undefined
-  }
-
-  isEmpty(): boolean {
-    return this.cards.length === 0
-  }
-}
+export class Tableau extends Pile {}
