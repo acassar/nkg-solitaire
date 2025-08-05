@@ -10,15 +10,10 @@ defineProps<{
 
 <template>
   <div class="stock">
-    <Card :face-up="false" v-if="drawPile.length > 0" />
+    <Card :card="drawPile[0]" v-if="drawPile.length > 0" />
     <div v-else class="card empty">×</div>
 
-    <Card
-      v-if="discardPile.length > 0"
-      :value="discardPile.at(-1)?.value"
-      :suit="discardPile.at(-1)?.suit"
-      :face-up="true"
-    />
+    <Card v-if="discardPile.length > 0" :card="discardPile.at(-1)!" />
     <div v-else class="card empty">×</div>
   </div>
 </template>

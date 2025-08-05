@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import type { Suit } from '@/models/Card'
+import type { Card, Suit } from '@/models/Card'
+import { useCardDrag } from '@/services/useCardDrag'
+import { useGameStateStore } from '@/stores/gameStateStore'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
-defineProps<{
-  value?: number
-  suit?: Suit
-  faceUp: boolean
-  canBeClicked?: boolean
+const { gameState } = storeToRefs(useGameStateStore())
+const { dragStart, dragEnd, drop } = useCardDrag(gameState)
+
+const props = defineProps<{
+  card: Card
 }>()
 
 const suitStyles: Record<Suit, { icon: string }> = {
@@ -14,25 +18,40 @@ const suitStyles: Record<Suit, { icon: string }> = {
   diamonds: { icon: '💎' },
   clubs: { icon: '🍀' },
 }
+
+const canBeClicked = computed(() => {
+  return (
+    gameState.value.tableau.some((pile) => pile.cards.includes(props.card)) && props.card.faceUp
+  )
+})
 </script>
 
 <template>
   <div
-    :class="['card', { faceUp, faceDown: !faceUp }, { canBeClicked: canBeClicked }]"
+    :class="[
+      'card',
+      { faceUp: card.faceUp, faceDown: !card.faceUp },
+      { canBeClicked: canBeClicked },
+    ]"
     @click="canBeClicked ? $emit('click') : null"
+    @dragstart="canBeClicked ? dragStart($event, card) : null"
+    :draggable="canBeClicked"
+    @dragend="dragEnd"
+    @dragover.prevent
+    @drop="(e) => drop(e, card.id)"
   >
-    <template v-if="faceUp">
+    <template v-if="card.faceUp">
       <div class="row">
-        <div class="value">{{ value }}</div>
-        <div>{{ suitStyles[suit!].icon }}</div>
+        <div class="value">{{ card.value }}</div>
+        <div>{{ suitStyles[card.suit!].icon }}</div>
       </div>
 
       <div class="row bottom-right">
-        <div class="value">{{ value }}</div>
-        <div>{{ suitStyles[suit!].icon }}</div>
+        <div class="value">{{ card.value }}</div>
+        <div>{{ suitStyles[card.suit!].icon }}</div>
       </div>
     </template>
-    <template v-else> 🂠 </template>
+    <template v-else> {{ card.faceUp }} </template>
   </div>
 </template>
 

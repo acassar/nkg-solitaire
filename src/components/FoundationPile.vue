@@ -9,12 +9,7 @@ defineProps<{
 
 <template>
   <div class="pile">
-    <Card
-      v-if="cards.length > 0"
-      :value="cards.at(-1)?.value"
-      :suit="cards.at(-1)?.suit"
-      :face-up="true"
-    />
+    <Card v-if="cards.length > 0" :card="cards.at(-1)!" />
     <div v-else class="card empty">×</div>
   </div>
 </template>

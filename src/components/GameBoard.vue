@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { initGame } from '@/utils/initGame'
-import type { GameState } from '@/utils/initGame'
-
 import Stock from './StockComponent.vue'
 import FoundationPile from './FoundationPile.vue'
 import TableauPile from './TableauPile.vue'
+import { storeToRefs } from 'pinia'
+import { useGameStateStore } from '@/stores/gameStateStore'
 
-const gameState = ref<GameState>(initGame())
+const { gameState } = storeToRefs(useGameStateStore())
 </script>
 
 <template>

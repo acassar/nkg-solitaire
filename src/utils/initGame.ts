@@ -9,6 +9,7 @@ export interface GameState {
     drawPile: Card[]
     discardPile: Card[]
   }
+  deck: Card[] // shuffled deck of cards
 }
 
 export function initGame(): GameState {
@@ -45,5 +46,6 @@ export function initGame(): GameState {
       drawPile,
       discardPile,
     },
+    deck,
   }
 }
