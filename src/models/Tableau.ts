@@ -1,6 +1,7 @@
 import type { Card } from './Card'
+import type { Pile } from './Pile'
 
-export class Tableau {
+export class Tableau implements Pile {
   cards: Card[]
 
   constructor(cards: Card[] = []) {

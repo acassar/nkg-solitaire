@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import type { Card, Suit } from '@/models/Card'
-import { useCardDrag } from '@/services/useCardDrag'
 import { useGameStateStore } from '@/stores/gameStateStore'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
 const { gameState } = storeToRefs(useGameStateStore())
-const { dragStart, dragEnd, drop } = useCardDrag(gameState)
+
+defineEmits<{
+  (e: 'click'): void
+  (e: 'dragStart', event: DragEvent): void
+  (e: 'dragEnd'): void
+  (e: 'drop', event: DragEvent): void
+}>()
 
 const props = defineProps<{
   card: Card
@@ -34,11 +39,11 @@ const canBeClicked = computed(() => {
       { canBeClicked: canBeClicked },
     ]"
     @click="canBeClicked ? $emit('click') : null"
-    @dragstart="canBeClicked ? dragStart($event, card) : null"
+    @dragstart="canBeClicked ? $emit('dragStart', $event) : null"
     :draggable="canBeClicked"
-    @dragend="dragEnd"
+    @dragend="$emit('dragEnd')"
     @dragover.prevent
-    @drop="(e) => drop(e, card.id)"
+    @drop="(e) => $emit('drop', e)"
   >
     <template v-if="card.faceUp">
       <div class="row">

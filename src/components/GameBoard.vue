@@ -4,8 +4,14 @@ import FoundationPile from './FoundationPile.vue'
 import TableauPile from './TableauPile.vue'
 import { storeToRefs } from 'pinia'
 import { useGameStateStore } from '@/stores/gameStateStore'
+import { useCardDrag } from '@/services/useCardDrag'
+import { useDragKey } from '@/constants/provideKeys'
+import { provide } from 'vue'
 
 const { gameState } = storeToRefs(useGameStateStore())
+const useDrag = useCardDrag()
+
+provide(useDragKey, useDrag)
 </script>
 
 <template>
@@ -19,7 +25,7 @@ const { gameState } = storeToRefs(useGameStateStore())
     </div>
 
     <div class="tableau">
-      <TableauPile v-for="(pile, i) in gameState.tableau" :key="i" :cards="pile.cards" />
+      <TableauPile v-for="(pile, i) in gameState.tableau" :key="i" :tableau="pile" />
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@ import { createDeck } from './deck'
 import { Tableau } from '@/models/Tableau'
 
 export interface GameState {
-  tableau: Pile[] // 7 columns
+  tableau: Tableau[] // 7 columns
   foundations: Pile[] // 4 empty foundations
   stock: {
     drawPile: Card[]

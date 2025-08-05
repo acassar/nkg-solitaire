@@ -1,28 +1,38 @@
 <script setup lang="ts">
-import { useCardDrag } from '@/services/useCardDrag'
+import { type TUseDrag } from '@/services/useCardDrag'
 import Card from './CardComponent.vue'
-import type { Card as CardType } from '@/models/Card'
-import { useGameStateStore } from '@/stores/gameStateStore'
-import { storeToRefs } from 'pinia'
+import { inject } from 'vue'
+import { useDragKey } from '@/constants/provideKeys'
+import type { Tableau } from '@/models/Tableau'
 
-const { gameState } = storeToRefs(useGameStateStore())
-const { drop } = useCardDrag(gameState)
+const useDrag = inject<TUseDrag>(useDragKey)
+if (!useDrag) {
+  throw new Error(
+    'useDrag is not provided. Ensure you are using this component within a provider context.',
+  )
+}
+const { dragStart, drop, dragEnd } = useDrag
 
 defineProps<{
-  cards: CardType[]
+  tableau: Tableau
 }>()
 </script>
 
 <template>
   <div class="pile">
     <div
-      v-if="cards.length === 0"
+      v-if="tableau.cards.length === 0"
       class="card empty"
       @dragover.prevent
-      @drop="(e) => drop(e)"
+      @drop="(e) => drop(e, tableau)"
     ></div>
-    <div v-else class="card-container" v-for="card in cards" :key="card.id">
-      <Card :card />
+    <div v-else class="card-container" v-for="card in tableau.cards" :key="card.id">
+      <Card
+        :card
+        @drag-start="dragStart($event, card, tableau)"
+        @drag-end="dragEnd"
+        @drop="(e) => drop(e, tableau)"
+      />
     </div>
   </div>
 </template>
