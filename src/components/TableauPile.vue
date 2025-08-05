@@ -16,10 +16,10 @@ defineProps<{
 <template>
   <div class="pile">
     <div
-      @dragover.prevent
-      @drop="(e) => drop(e)"
       v-if="cards.length === 0"
       class="card empty"
+      @dragover.prevent
+      @drop="(e) => drop(e)"
     ></div>
     <div v-else class="card-container" v-for="card in cards" :key="card.id">
       <Card :card />

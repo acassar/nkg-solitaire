@@ -1,6 +1,7 @@
 import type { Card } from '@/models/Card'
 import type { Pile } from '@/models/Pile'
 import { createDeck } from './deck'
+import { Tableau } from '@/models/Tableau'
 
 export interface GameState {
   tableau: Pile[] // 7 columns
@@ -14,7 +15,7 @@ export interface GameState {
 
 export function initGame(): GameState {
   const deck = createDeck() // shuffled deck of cards
-  const tableau: Pile[] = []
+  const tableau: Tableau[] = []
   let deckIndex = 0
 
   // distribute cards to tableau
@@ -30,7 +31,7 @@ export function initGame(): GameState {
       })
     }
 
-    tableau.push({ cards })
+    tableau.push(new Tableau(cards))
   }
 
   // remaining cards in the deck are the draw pile
