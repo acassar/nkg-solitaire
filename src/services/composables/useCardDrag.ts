@@ -31,19 +31,23 @@ export const useCardDrag = () => {
         return
       }
 
-      const { card, from } = dragging.value
-      console.info('Dropping card:', card, 'from:', from, 'to:', target)
+      if (target.isValidMove(dragging.value.card)) {
+        const { card, from } = dragging.value
+        console.info('Dropping card:', card, 'from:', from, 'to:', target)
 
-      // Remove the card from the original pile
-      const removedCard = from.removeCard(card.id)
-      if (!removedCard) {
-        console.error('Failed to remove card from source pile:', from)
-        return
+        // Remove the card from the original pile
+        const removedCard = from.removeCard(card.id)
+        if (!removedCard) {
+          console.error('Failed to remove card from source pile:', from)
+          return
+        }
+
+        // Add the card to the target pile
+        target.addCard(removedCard)
+        console.info('Card dropped successfully:', removedCard)
+      } else {
+        console.warn('Invalid move:', dragging.value.card, 'to', target)
       }
-
-      // Add the card to the target pile
-      target.addCard(removedCard)
-      console.info('Card dropped successfully:', removedCard)
     } finally {
       dragging.value = undefined
     }

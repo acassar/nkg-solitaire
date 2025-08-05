@@ -1,6 +1,6 @@
 import type { Card } from './Card'
 
-export class Pile {
+export abstract class Pile {
   cards: Card[]
 
   constructor(cards: Card[] = []) {
@@ -22,4 +22,10 @@ export class Pile {
   isEmpty(): boolean {
     return this.cards.length === 0
   }
+
+  get topCard(): Card | undefined {
+    return this.cards.at(-1)
+  }
+
+  abstract isValidMove(card: Card): boolean
 }
