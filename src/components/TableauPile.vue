@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type TUseDrag } from '@/services/useCardDrag'
+import { type TUseDrag } from '@/services/composables/useCardDrag'
 import Card from './CardComponent.vue'
 import { inject } from 'vue'
 import { useDragKey } from '@/constants/provideKeys'

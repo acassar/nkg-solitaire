@@ -1,0 +1,59 @@
+import type { Card } from '@/models/Card'
+import { ref } from 'vue'
+import { useGameStateStore } from '@/stores/gameStateStore'
+import type { Dragging } from '@/models/Drag'
+import type { Pile } from '@/models/Pile'
+
+export const useCardDrag = () => {
+  const dragging = ref<Dragging>()
+
+  const dragStart = (_event: DragEvent, card: Card, from: Pile) => {
+    console.info('Drag started:', card, 'from:', from)
+    dragging.value = {
+      card: card,
+      from: from,
+    }
+
+    if (!card) return
+  }
+
+  const dragEnd = () => {
+    console.info('Drag ended')
+    const { setDraggingCard } = useGameStateStore()
+    setDraggingCard(undefined)
+  }
+
+  const drop = (_event: DragEvent, target: Pile) => {
+    console.info('Drop event:', target)
+    try {
+      if (!dragging.value) {
+        console.warn('No card is being dragged')
+        return
+      }
+
+      const { card, from } = dragging.value
+      console.info('Dropping card:', card, 'from:', from, 'to:', target)
+
+      // Remove the card from the original pile
+      const removedCard = from.removeCard(card.id)
+      if (!removedCard) {
+        console.error('Failed to remove card from source pile:', from)
+        return
+      }
+
+      // Add the card to the target pile
+      target.addCard(removedCard)
+      console.info('Card dropped successfully:', removedCard)
+    } finally {
+      dragging.value = undefined
+    }
+  }
+
+  return {
+    dragStart,
+    dragEnd,
+    drop,
+  }
+}
+
+export type TUseDrag = ReturnType<typeof useCardDrag>

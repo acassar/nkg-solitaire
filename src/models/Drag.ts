@@ -1,8 +1,7 @@
 import type { Card } from './Card'
-import type { Foundation } from './Foundation'
-import type { Tableau } from './Tableau'
+import type { Pile } from './Pile'
 
-export interface Drag {
-  dragging: Card
-  DraggingFrom: Tableau | Foundation
+export interface Dragging {
+  card: Card
+  from: Pile
 }

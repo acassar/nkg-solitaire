@@ -4,7 +4,7 @@ import FoundationPile from './FoundationPile.vue'
 import TableauPile from './TableauPile.vue'
 import { storeToRefs } from 'pinia'
 import { useGameStateStore } from '@/stores/gameStateStore'
-import { useCardDrag } from '@/services/useCardDrag'
+import { useCardDrag } from '@/services/composables/useCardDrag'
 import { useDragKey } from '@/constants/provideKeys'
 import { provide } from 'vue'
 
