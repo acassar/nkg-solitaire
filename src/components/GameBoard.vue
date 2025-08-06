@@ -20,7 +20,11 @@ provide(useDragKey, useDrag)
       <Stock :draw-pile="gameState.stock.drawPile" :discard-pile="gameState.stock.discardPile" />
 
       <div class="foundations">
-        <FoundationPile v-for="(pile, i) in gameState.foundations" :key="i" :cards="pile.cards" />
+        <FoundationPile
+          v-for="(foundation, i) in gameState.foundations"
+          :key="i"
+          :foundation="foundation"
+        />
       </div>
     </div>
 

@@ -4,6 +4,8 @@ import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
 import { Tableau } from '@/models/Tableau'
 import { moveStackedCardsFromTableauToTableau } from '../tableauService'
+import { Foundation } from '@/models/Foundation'
+import { moveStackedCardsFromTableauToFoundation } from '../foundationService'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
@@ -42,6 +44,17 @@ export const useCardDrag = () => {
           return
         }
         moveStackedCardsFromTableauToTableau(
+          dragging.value.from as Tableau,
+          target,
+          dragging.value.cards,
+        )
+      }
+
+      if (target instanceof Foundation) {
+        if (!target.isValidMove(dragging.value.cards[0])) {
+          return
+        }
+        moveStackedCardsFromTableauToFoundation(
           dragging.value.from as Tableau,
           target,
           dragging.value.cards,

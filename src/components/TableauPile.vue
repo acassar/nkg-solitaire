@@ -12,12 +12,13 @@ if (!useDrag) {
     'useDrag is not provided. Ensure you are using this component within a provider context.',
   )
 }
-const { dragStart, drop, dragEnd, dragging } = useDrag
-const { x, y } = useMouse()
 
 defineProps<{
   tableau: Tableau
 }>()
+
+const { dragStart, drop, dragEnd, dragging } = useDrag
+const { x, y } = useMouse()
 </script>
 
 <template>
