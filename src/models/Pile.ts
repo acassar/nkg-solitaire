@@ -27,5 +27,10 @@ export abstract class Pile {
     return this.cards.at(-1)
   }
 
+  // Returns the cards stacked on top of the specified card
+  getStackedCards(cardId: string): Card[] {
+    return this.cards.slice(this.cards.findIndex((card) => card.id === cardId))
+  }
+
   abstract isValidMove(card: Card): boolean
 }

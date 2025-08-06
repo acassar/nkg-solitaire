@@ -76,7 +76,7 @@ export const initDevGame = (): GameState => {
         { id: '5', value: 9, suit: 'hearts', faceUp: false },
         { id: '6', value: 12, suit: 'diamonds', faceUp: true },
       ]),
-      new Tableau([]),
+      new Tableau([{ id: '7', value: 13, suit: 'spades', faceUp: true }]),
       new Tableau([]),
       new Tableau([]),
       new Tableau([]),

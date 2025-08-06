@@ -4,18 +4,22 @@ import { useGameStateStore } from '@/stores/gameStateStore'
 import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
 import { Tableau } from '@/models/Tableau'
-import { moveCardFromTableauToTableau } from '../tableauService'
+import { moveStackedCardsFromTableauToTableau } from '../tableauService'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
 
   const dragStart = (_event: DragEvent, card: Card, from: Pile) => {
     console.info('Drag started:', card, 'from:', from)
+
+    const stackedCards = from.getStackedCards(card.id)
+
     dragging.value = {
-      card: card,
+      cards: stackedCards,
       from: from,
     }
 
+    console.log(stackedCards)
     if (!card) return
   }
 
@@ -34,7 +38,14 @@ export const useCardDrag = () => {
       }
 
       if (target instanceof Tableau) {
-        moveCardFromTableauToTableau(dragging.value.from as Tableau, target, dragging.value.card)
+        if (!target.isValidMove(dragging.value.cards[0])) {
+          return
+        }
+        moveStackedCardsFromTableauToTableau(
+          dragging.value.from as Tableau,
+          target,
+          dragging.value.cards,
+        )
       }
     } finally {
       dragging.value = undefined
