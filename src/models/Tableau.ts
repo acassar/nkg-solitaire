@@ -16,4 +16,17 @@ export class Tableau extends Pile {
         (topCard!.suit === 'hearts' || topCard!.suit === 'diamonds')
     )
   }
+
+  revealTopCard(): Card | undefined {
+    if (this.isEmpty()) {
+      return undefined
+    }
+
+    const { topCard } = this
+    if (topCard && !topCard.faceUp) {
+      topCard.faceUp = true
+
+      return topCard
+    }
+  }
 }

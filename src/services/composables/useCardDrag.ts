@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useGameStateStore } from '@/stores/gameStateStore'
 import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
+import { Tableau } from '@/models/Tableau'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
@@ -44,6 +45,11 @@ export const useCardDrag = () => {
 
         // Add the card to the target pile
         target.addCard(removedCard)
+
+        //reveal the top card of the tableau if the source was a tableau
+        if (dragging.value.from instanceof Tableau) {
+          dragging.value.from.revealTopCard()
+        }
         console.info('Card dropped successfully:', removedCard)
       } else {
         console.warn('Invalid move:', dragging.value.card, 'to', target)
