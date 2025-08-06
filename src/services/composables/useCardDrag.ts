@@ -4,6 +4,7 @@ import { useGameStateStore } from '@/stores/gameStateStore'
 import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
 import { Tableau } from '@/models/Tableau'
+import { moveCardFromTableauToTableau } from '../tableauService'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
@@ -32,27 +33,8 @@ export const useCardDrag = () => {
         return
       }
 
-      if (target.isValidMove(dragging.value.card)) {
-        const { card, from } = dragging.value
-        console.info('Dropping card:', card, 'from:', from, 'to:', target)
-
-        // Remove the card from the original pile
-        const removedCard = from.removeCard(card.id)
-        if (!removedCard) {
-          console.error('Failed to remove card from source pile:', from)
-          return
-        }
-
-        // Add the card to the target pile
-        target.addCard(removedCard)
-
-        //reveal the top card of the tableau if the source was a tableau
-        if (dragging.value.from instanceof Tableau) {
-          dragging.value.from.revealTopCard()
-        }
-        console.info('Card dropped successfully:', removedCard)
-      } else {
-        console.warn('Invalid move:', dragging.value.card, 'to', target)
+      if (target instanceof Tableau) {
+        moveCardFromTableauToTableau(dragging.value.from as Tableau, target, dragging.value.card)
       }
     } finally {
       dragging.value = undefined
