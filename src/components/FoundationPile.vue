@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Card from './CardComponent.vue'
+import Card from './card/CardComponent.vue'
 import type { Card as CardType } from '@/models/Card'
 
 defineProps<{

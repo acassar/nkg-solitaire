@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject } from 'vue'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
-import Card from './CardComponent.vue'
+import Card from './card/CardComponent.vue'
 import { useDragKey } from '@/constants/provideKeys'
 import type { Tableau } from '@/models/Tableau'
 import { useMouse } from '@vueuse/core'

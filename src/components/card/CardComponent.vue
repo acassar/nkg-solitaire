@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { Card, Suit } from '@/models/Card'
+import type { Card } from '@/models/Card'
 import { useGameStateStore } from '@/stores/gameStateStore'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import CardRow from './components/CardRow.vue'
 
 const { gameState } = storeToRefs(useGameStateStore())
 
@@ -17,13 +18,6 @@ const props = defineProps<{
   card: Card
   beingDragged?: boolean
 }>()
-
-const suitStyles: Record<Suit, { icon: string }> = {
-  spades: { icon: '🗡️' },
-  hearts: { icon: '❤️' },
-  diamonds: { icon: '💎' },
-  clubs: { icon: '🍀' },
-}
 
 const canBeClicked = computed(() => {
   return (
@@ -49,13 +43,11 @@ const canBeClicked = computed(() => {
   >
     <template v-if="card.faceUp">
       <div class="row">
-        <div class="value">{{ card.value }}</div>
-        <div>{{ suitStyles[card.suit!].icon }}</div>
+        <CardRow :card="card" />
       </div>
 
-      <div class="row bottom-right">
-        <div class="value">{{ card.value }}</div>
-        <div>{{ suitStyles[card.suit!].icon }}</div>
+      <div class="reversed-row bottom-right">
+        <CardRow :card="card" />
       </div>
     </template>
     <template v-else> {{ card.faceUp }} </template>
@@ -97,19 +89,16 @@ const canBeClicked = computed(() => {
   padding: 4px;
 }
 
-.bottom-right {
+.reversed-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
   transform: rotate(180deg);
 }
 
-.value {
-  font-size: 16px;
-  font-weight: bold;
-  font-family:
-    'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-.icon {
-  font-size: 12px;
+.bottom-right {
+  transform: rotate(180deg);
 }
 
 .dragging {
