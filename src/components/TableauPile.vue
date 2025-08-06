@@ -34,6 +34,7 @@ const { x, y } = useMouse()
         :card
         :being-dragged="dragging?.cards.includes(card)"
         :key="card.id"
+        :can-be-clicked="card.faceUp"
         @drag-start="dragStart($event, card, tableau)"
         @drag-end="dragEnd"
         @drop="(e) => drop(e, tableau)"
@@ -65,7 +66,7 @@ const { x, y } = useMouse()
         pointerEvents: 'none',
       }"
     >
-      <Card :card="card" :beingDragged="true" />
+      <Card :card="card" :beingDragged="true" :can-be-clicked="false" />
     </div>
   </div>
 </template>

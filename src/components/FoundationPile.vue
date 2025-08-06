@@ -28,7 +28,7 @@ const { drop } = useDrag
         class="card-container"
         :style="{ zIndex: index + 1 }"
       >
-        <Card :card="card" />
+        <Card :can-be-clicked="true" :card="card" />
       </div>
     </template>
     <div v-else class="card empty">×</div>

@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import type { Card } from '@/models/Card'
-import { useGameStateStore } from '@/stores/gameStateStore'
-import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
 import CardRow from './components/CardRow.vue'
-
-const { gameState } = storeToRefs(useGameStateStore())
 
 defineEmits<{
   (e: 'click'): void
@@ -14,16 +9,11 @@ defineEmits<{
   (e: 'drop', event: DragEvent): void
 }>()
 
-const props = defineProps<{
+defineProps<{
   card: Card
   beingDragged?: boolean
+  canBeClicked: boolean
 }>()
-
-const canBeClicked = computed(() => {
-  return (
-    gameState.value.tableau.some((pile) => pile.cards.includes(props.card)) && props.card.faceUp
-  )
-})
 </script>
 
 <template>

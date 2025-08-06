@@ -2,6 +2,8 @@ import type { Card } from '@/models/Card'
 import { createDeck } from './deck'
 import { Tableau } from '@/models/Tableau'
 import { Foundation } from '@/models/Foundation'
+import { DrawPile } from '@/models/DrawPile'
+import { DiscardPile } from '@/models/DiscardPile'
 
 type SevenTableau = [Tableau, Tableau, Tableau, Tableau, Tableau, Tableau, Tableau]
 type FourFoundation = [Foundation, Foundation, Foundation, Foundation]
@@ -10,8 +12,8 @@ export interface GameState {
   tableau: SevenTableau // 7 columns
   foundations: FourFoundation // 4 empty foundations
   stock: {
-    drawPile: Card[]
-    discardPile: Card[]
+    drawPile: DrawPile
+    discardPile: DiscardPile
   }
   deck: Card[] // shuffled deck of cards
 }
@@ -38,8 +40,8 @@ export function initGame(): GameState {
   }
 
   // remaining cards in the deck are the draw pile
-  const drawPile: Card[] = deck.slice(deckIndex)
-  const discardPile: Card[] = []
+  const drawPile: DrawPile = new DrawPile(deck.slice(deckIndex))
+  const discardPile: DiscardPile = new DiscardPile()
 
   const buildFoundation = () => new Foundation([]) // create empty foundations
 
@@ -92,8 +94,8 @@ export const initDevGame = (): GameState => {
       new Foundation([]),
     ] as FourFoundation,
     stock: {
-      drawPile: [],
-      discardPile: [],
+      drawPile: new DrawPile(),
+      discardPile: new DiscardPile(),
     },
     deck: createDeck(),
   }

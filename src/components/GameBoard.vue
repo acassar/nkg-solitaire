@@ -17,14 +17,10 @@ provide(useDragKey, useDrag)
 <template>
   <div class="game-board">
     <div class="top-row">
-      <Stock :draw-pile="gameState.stock.drawPile" :discard-pile="gameState.stock.discardPile" />
+      <Stock v-model="gameState.stock" />
 
       <div class="foundations">
-        <FoundationPile
-          v-for="(foundation, i) in gameState.foundations"
-          :key="i"
-          :foundation="foundation"
-        />
+        <FoundationPile v-for="(pile, i) in gameState.foundations" :key="i" :foundation="pile" />
       </div>
     </div>
 

@@ -1,46 +1,64 @@
 <script setup lang="ts">
 import Card from './card/CardComponent.vue'
-import type { Card as CardType } from '@/models/Card'
-import { storeToRefs } from 'pinia'
-import { useGameStateStore } from '@/stores/gameStateStore'
-import { computed } from 'vue'
+import { inject } from 'vue'
+import type { TUseDrag } from '@/services/composables/useCardDrag'
+import { useDragKey } from '@/constants/provideKeys'
+import type { DrawPile } from '@/models/DrawPile'
+import type { DiscardPile } from '@/models/DiscardPile'
 
-defineProps<{
-  drawPile: CardType[]
-  discardPile: CardType[]
-}>()
+const useDrag = inject<TUseDrag>(useDragKey)
+if (!useDrag) {
+  throw new Error(
+    'useDrag is not provided. Ensure you are using this component within a provider context.',
+  )
+}
 
-const { gameState } = storeToRefs(useGameStateStore())
-const stock = computed(() => gameState.value.stock)
+const stock = defineModel<{ drawPile: DrawPile; discardPile: DiscardPile }>({ required: true })
+
+const { dragStart, dragEnd } = useDrag
 
 const drawCard = () => {
-  if (stock.value.drawPile.length === 0) handleLastCardDrawn()
+  if (stock.value.drawPile.cards.length === 0) handleLastCardDrawn()
 
-  const card = stock.value.drawPile.shift()
+  const card = stock.value.drawPile.cards.shift()
   if (card) {
     card.faceUp = true
-    stock.value.discardPile.push(card)
+    stock.value.discardPile.cards.push(card)
   }
 }
 
 const handleLastCardDrawn = () => {
-  stock.value.drawPile = stock.value.discardPile
-  stock.value.discardPile = []
-  stock.value.drawPile.forEach((card) => (card.faceUp = false))
+  stock.value.drawPile.cards = stock.value.discardPile.cards
+  stock.value.discardPile.cards = []
+  stock.value.drawPile.cards.forEach((card) => (card.faceUp = false))
 }
 </script>
 
 <template>
-  <div class="stock" @click="drawCard">
-    <div class="draw-pile">
-      <Card :card="drawPile[0]" v-if="drawPile.length > 0" />
+  <div class="stock">
+    <div class="draw-pile" @click="drawCard">
+      <Card
+        :can-be-clicked="false"
+        :card="stock.drawPile.cards[0]"
+        v-if="stock.drawPile.cards.length > 0"
+      />
       <div v-else class="card empty">×</div>
     </div>
 
     <div class="discard-pile">
-      <template v-if="discardPile.length > 0">
-        <div v-for="card in discardPile.slice(-3)" :key="card.id" class="card-container">
-          <Card :card="card" />
+      <template v-if="stock.discardPile.cards.length > 0">
+        <div
+          v-for="card in stock.discardPile.cards.slice(-3)"
+          :key="card.id"
+          class="card-container"
+        >
+          <!-- TODO: handle can be clicked -->
+          <Card
+            :card="card"
+            :can-be-clicked="true"
+            @drag-start="dragStart($event, card, stock.discardPile)"
+            @drag-end="dragEnd"
+          />
         </div>
       </template>
       <div v-else class="card empty">×</div>
