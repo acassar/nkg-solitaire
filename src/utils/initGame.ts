@@ -60,3 +60,37 @@ export function initGame(): GameState {
     deck,
   }
 }
+
+export const initDevGame = (): GameState => {
+  return {
+    tableau: [
+      new Tableau([
+        { id: '1', value: 13, suit: 'hearts', faceUp: false },
+        { id: '2', value: 11, suit: 'spades', faceUp: true },
+      ]),
+      new Tableau([
+        { id: '3', value: 11, suit: 'clubs', faceUp: false },
+        { id: '4', value: 10, suit: 'diamonds', faceUp: true },
+      ]),
+      new Tableau([
+        { id: '5', value: 9, suit: 'hearts', faceUp: false },
+        { id: '6', value: 12, suit: 'diamonds', faceUp: true },
+      ]),
+      new Tableau([]),
+      new Tableau([]),
+      new Tableau([]),
+      new Tableau([]),
+    ] as SevenTableau,
+    foundations: [
+      new Foundation([]),
+      new Foundation([]),
+      new Foundation([]),
+      new Foundation([]),
+    ] as FourFoundation,
+    stock: {
+      drawPile: [],
+      discardPile: [],
+    },
+    deck: createDeck(),
+  }
+}

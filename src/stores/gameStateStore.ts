@@ -1,10 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { type GameState, initGame } from '@/utils/initGame'
+import { type GameState, initDevGame } from '@/utils/initGame'
 import type { Card } from '@/models/Card'
 
 export const useGameStateStore = defineStore('gameState', () => {
-  const gameState = ref<GameState>(initGame())
+  const gameState = ref<GameState>(initDevGame())
 
   const draggingCard = ref<Card>()
 
