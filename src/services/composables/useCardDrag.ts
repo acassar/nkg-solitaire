@@ -1,6 +1,5 @@
 import type { Card } from '@/models/Card'
 import { ref } from 'vue'
-import { useGameStateStore } from '@/stores/gameStateStore'
 import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
 import { Tableau } from '@/models/Tableau'
@@ -14,6 +13,8 @@ export const useCardDrag = () => {
 
     const stackedCards = from.getStackedCards(card.id)
 
+    _event.dataTransfer?.setDragImage(new Image(), 0, 0) // Hide default drag image
+
     dragging.value = {
       cards: stackedCards,
       from: from,
@@ -25,8 +26,7 @@ export const useCardDrag = () => {
 
   const dragEnd = () => {
     console.info('Drag ended')
-    const { setDraggingCard } = useGameStateStore()
-    setDraggingCard(undefined)
+    dragging.value = undefined
   }
 
   const drop = (_event: DragEvent, target: Pile) => {
@@ -56,6 +56,7 @@ export const useCardDrag = () => {
     dragStart,
     dragEnd,
     drop,
+    dragging,
   }
 }
 

@@ -15,6 +15,7 @@ defineEmits<{
 
 const props = defineProps<{
   card: Card
+  beingDragged?: boolean
 }>()
 
 const suitStyles: Record<Suit, { icon: string }> = {
@@ -37,6 +38,7 @@ const canBeClicked = computed(() => {
       'card',
       { faceUp: card.faceUp, faceDown: !card.faceUp },
       { canBeClicked: canBeClicked },
+      { dragging: beingDragged },
     ]"
     @click="canBeClicked ? $emit('click') : null"
     @dragstart="canBeClicked ? $emit('dragStart', $event) : null"
@@ -108,5 +110,9 @@ const canBeClicked = computed(() => {
 
 .icon {
   font-size: 12px;
+}
+
+.dragging {
+  opacity: 0.7;
 }
 </style>
