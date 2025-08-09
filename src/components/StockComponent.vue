@@ -75,6 +75,7 @@ const handleLastCardDrawn = () => {
 .draw-pile {
   width: var(--card-width);
   height: var(--card-height);
+  cursor: pointer;
 }
 
 .discard-pile {

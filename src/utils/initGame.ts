@@ -4,6 +4,7 @@ import { Tableau } from '@/models/Tableau'
 import { Foundation } from '@/models/Foundation'
 import { DrawPile } from '@/models/DrawPile'
 import { DiscardPile } from '@/models/DiscardPile'
+import { v4 } from 'uuid'
 
 type SevenTableau = [Tableau, Tableau, Tableau, Tableau, Tableau, Tableau, Tableau]
 type FourFoundation = [Foundation, Foundation, Foundation, Foundation]
@@ -67,22 +68,22 @@ export const initDevGame = (): GameState => {
   return {
     tableau: [
       new Tableau([
-        { id: '1', value: 13, suit: 'hearts', faceUp: false },
-        { id: '2', value: 11, suit: 'spades', faceUp: true },
+        { id: v4(), value: 13, suit: 'hearts', faceUp: false },
+        { id: v4(), value: 11, suit: 'spades', faceUp: true },
       ]),
       new Tableau([
-        { id: '3', value: 11, suit: 'clubs', faceUp: false },
-        { id: '4', value: 10, suit: 'diamonds', faceUp: true },
+        { id: v4(), value: 11, suit: 'clubs', faceUp: false },
+        { id: v4(), value: 10, suit: 'diamonds', faceUp: true },
       ]),
       new Tableau([
-        { id: '5', value: 9, suit: 'hearts', faceUp: false },
-        { id: '6', value: 12, suit: 'diamonds', faceUp: true },
+        { id: v4(), value: 9, suit: 'hearts', faceUp: false },
+        { id: v4(), value: 12, suit: 'diamonds', faceUp: true },
       ]),
-      new Tableau([{ id: '7', value: 13, suit: 'spades', faceUp: true }]),
+      new Tableau([{ id: v4(), value: 13, suit: 'spades', faceUp: true }]),
       new Tableau([
-        { id: '10', value: 3, suit: 'hearts', faceUp: false },
-        { id: '9', value: 2, suit: 'hearts', faceUp: false },
-        { id: '8', value: 1, suit: 'hearts', faceUp: true },
+        { id: v4(), value: 3, suit: 'hearts', faceUp: false },
+        { id: v4(), value: 2, suit: 'hearts', faceUp: false },
+        { id: v4(), value: 1, suit: 'hearts', faceUp: true },
       ]),
       new Tableau([]),
       new Tableau([]),
@@ -94,7 +95,7 @@ export const initDevGame = (): GameState => {
       new Foundation([]),
     ] as FourFoundation,
     stock: {
-      drawPile: new DrawPile(),
+      drawPile: new DrawPile([{ faceUp: false, id: v4(), suit: 'clubs', value: 13 }]),
       discardPile: new DiscardPile(),
     },
     deck: createDeck(),

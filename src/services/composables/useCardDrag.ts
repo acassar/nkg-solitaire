@@ -43,22 +43,28 @@ export const useCardDrag = () => {
         if (!target.isValidMove(dragging.value.cards[0])) {
           return
         }
-        moveStackedCardsFromTableauToTableau(
-          dragging.value.from as Tableau,
-          target,
-          dragging.value.cards,
-        )
+
+        // Check that the source is actually a Tableau
+        if (!(dragging.value.from instanceof Tableau)) {
+          console.warn('Cannot move from non-Tableau to Tableau')
+          return
+        }
+
+        moveStackedCardsFromTableauToTableau(dragging.value.from, target, dragging.value.cards)
       }
 
       if (target instanceof Foundation) {
         if (!target.isValidMove(dragging.value.cards[0])) {
           return
         }
-        moveStackedCardsFromTableauToFoundation(
-          dragging.value.from as Tableau,
-          target,
-          dragging.value.cards,
-        )
+
+        // Check that the source is actually a Tableau
+        if (!(dragging.value.from instanceof Tableau)) {
+          console.warn('Cannot move from non-Tableau to Foundation')
+          return
+        }
+
+        moveStackedCardsFromTableauToFoundation(dragging.value.from, target, dragging.value.cards)
       }
     } finally {
       dragging.value = undefined
