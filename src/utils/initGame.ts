@@ -85,7 +85,7 @@ export const initDevGame = (): GameState => {
         { id: v4(), value: 2, suit: 'hearts', faceUp: false },
         { id: v4(), value: 1, suit: 'hearts', faceUp: true },
       ]),
-      new Tableau([]),
+      new Tableau([{ id: v4(), faceUp: true, suit: 'spades', value: 3 }]),
       new Tableau([]),
     ] as SevenTableau,
     foundations: [
@@ -95,7 +95,10 @@ export const initDevGame = (): GameState => {
       new Foundation([]),
     ] as FourFoundation,
     stock: {
-      drawPile: new DrawPile([{ faceUp: false, id: v4(), suit: 'clubs', value: 13 }]),
+      drawPile: new DrawPile([
+        { faceUp: false, id: v4(), suit: 'clubs', value: 13 },
+        { faceUp: false, id: v4(), suit: 'clubs', value: 12 },
+      ]),
       discardPile: new DiscardPile(),
     },
     deck: createDeck(),

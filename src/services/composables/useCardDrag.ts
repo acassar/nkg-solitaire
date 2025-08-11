@@ -2,10 +2,7 @@ import type { Card } from '@/models/Card'
 import { ref } from 'vue'
 import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
-import { Tableau } from '@/models/Tableau'
-import { moveStackedCardsFromTableauToTableau } from '../tableauService'
-import { Foundation } from '@/models/Foundation'
-import { moveStackedCardsFromTableauToFoundation } from '../foundationService'
+import { processMoveHandlers } from '../moveHandlers'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
@@ -31,6 +28,7 @@ export const useCardDrag = () => {
     dragging.value = undefined
   }
 
+  // Main drop handler
   const drop = (_event: DragEvent, target: Pile) => {
     console.info('Drop event:', target)
     try {
@@ -39,32 +37,11 @@ export const useCardDrag = () => {
         return
       }
 
-      if (target instanceof Tableau) {
-        if (!target.isValidMove(dragging.value.cards[0])) {
-          return
-        }
+      const { from, cards } = dragging.value
 
-        // Check that the source is actually a Tableau
-        if (!(dragging.value.from instanceof Tableau)) {
-          console.warn('Cannot move from non-Tableau to Tableau')
-          return
-        }
-
-        moveStackedCardsFromTableauToTableau(dragging.value.from, target, dragging.value.cards)
-      }
-
-      if (target instanceof Foundation) {
-        if (!target.isValidMove(dragging.value.cards[0])) {
-          return
-        }
-
-        // Check that the source is actually a Tableau
-        if (!(dragging.value.from instanceof Tableau)) {
-          console.warn('Cannot move from non-Tableau to Foundation')
-          return
-        }
-
-        moveStackedCardsFromTableauToFoundation(dragging.value.from, target, dragging.value.cards)
+      // Process the move using all available handlers
+      if (!processMoveHandlers(from, target, cards)) {
+        console.warn('Unsupported move type:', from.constructor.name, 'to', target.constructor.name)
       }
     } finally {
       dragging.value = undefined

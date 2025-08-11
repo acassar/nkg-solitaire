@@ -16,7 +16,7 @@ defineProps<{
   foundation: Foundation
 }>()
 
-const { drop } = useDrag
+const { drop, dragStart, dragEnd } = useDrag
 </script>
 
 <template>
@@ -28,7 +28,12 @@ const { drop } = useDrag
         class="card-container"
         :style="{ zIndex: index + 1 }"
       >
-        <Card :can-be-clicked="true" :card="card" />
+        <Card
+          :can-be-clicked="true"
+          :card="card"
+          @drag-start="dragStart($event, card, foundation)"
+          @drag-end="dragEnd"
+        />
       </div>
     </template>
     <div v-else class="card empty">×</div>
