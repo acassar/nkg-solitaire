@@ -7,12 +7,10 @@ import { processMoveHandlers } from '../moveHandlers'
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
 
-  const dragStart = (_event: DragEvent, card: Card, from: Pile) => {
+  const dragStart = (card: Card, from: Pile) => {
     console.info('Drag started:', card, 'from:', from)
 
     const stackedCards = from.getStackedCards(card.id)
-
-    _event.dataTransfer?.setDragImage(new Image(), 0, 0) // Hide default drag image
 
     dragging.value = {
       cards: stackedCards,
@@ -29,7 +27,7 @@ export const useCardDrag = () => {
   }
 
   // Main drop handler
-  const drop = (_event: DragEvent, target: Pile) => {
+  const drop = (target: Pile) => {
     console.info('Drop event:', target)
     try {
       if (!dragging.value) {

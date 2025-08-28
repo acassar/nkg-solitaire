@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { type TUseDrag } from '@/services/composables/useCardDrag'
 import Card from './card/CardComponent.vue'
-import type { Foundation } from '@/models/Foundation'
-import { inject } from 'vue'
+import { Foundation } from '@/models/Foundation'
+import { inject, onMounted, ref } from 'vue'
 import { useDragKey } from '@/constants/provideKeys'
+import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
+import { v4 } from 'uuid'
 
 const useDrag = inject<TUseDrag>(useDragKey)
 if (!useDrag) {
@@ -12,15 +14,40 @@ if (!useDrag) {
   )
 }
 
-defineProps<{
+const props = defineProps<{
   foundation: Foundation
 }>()
 
+const foundationRef = ref<HTMLElement | null>(null)
+
 const { drop, dragStart, dragEnd } = useDrag
+const { registerDropZone } = useDragAndDrop()
+
+const onHover = () => {
+  if (!foundationRef.value) throw Error('Ref non montée')
+
+  foundationRef.value.style.backgroundColor = 'grey'
+}
+
+const onStopHovering = () => {
+  if (!foundationRef.value) throw Error('Ref non montée')
+  foundationRef.value.style.backgroundColor = ''
+}
+
+onMounted(() => {
+  if (!foundationRef.value) throw Error('Ref non montée')
+  registerDropZone({
+    id: v4(),
+    el: foundationRef.value,
+    onHover: onHover,
+    onDrop: () => drop(props.foundation),
+    onStopHovering: onStopHovering,
+  })
+})
 </script>
 
 <template>
-  <div class="pile" @dragover.prevent @drop="(e) => drop(e, foundation)">
+  <div ref="foundationRef" class="pile">
     <template v-if="foundation.cards.length > 0">
       <div
         v-for="(card, index) in foundation.cards"
@@ -31,7 +58,7 @@ const { drop, dragStart, dragEnd } = useDrag
         <Card
           :can-be-clicked="true"
           :card="card"
-          @drag-start="dragStart($event, card, foundation)"
+          @drag-start="dragStart(card, foundation)"
           @drag-end="dragEnd"
         />
       </div>

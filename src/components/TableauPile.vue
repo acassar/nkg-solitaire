@@ -4,7 +4,6 @@ import { type TUseDrag } from '@/services/composables/useCardDrag'
 import Card from './card/CardComponent.vue'
 import { useDragKey } from '@/constants/provideKeys'
 import type { Tableau } from '@/models/Tableau'
-import { useMouse } from '@vueuse/core'
 
 const useDrag = inject<TUseDrag>(useDragKey)
 if (!useDrag) {
@@ -17,56 +16,25 @@ defineProps<{
   tableau: Tableau
 }>()
 
-const { dragStart, drop, dragEnd, dragging } = useDrag
-const { x, y } = useMouse()
+const { dragStart, dragEnd, dragging } = useDrag
+
+const handleDragEnd = () => {
+  dragEnd()
+}
 </script>
 
 <template>
   <div class="pile">
-    <div
-      v-if="tableau.cards.length === 0"
-      class="card empty"
-      @dragover.prevent
-      @drop="(e) => drop(e, tableau)"
-    ></div>
+    <div v-if="tableau.cards.length === 0" class="card empty" @dragover.prevent></div>
     <div v-else class="card-container" v-for="card in tableau.cards" :key="card.id">
       <Card
         :card
         :being-dragged="dragging?.cards.includes(card)"
         :key="card.id"
         :can-be-clicked="card.faceUp"
-        @drag-start="dragStart($event, card, tableau)"
-        @drag-end="dragEnd"
-        @drop="(e) => drop(e, tableau)"
+        @drag-start="dragStart(card, tableau)"
+        @drag-end="handleDragEnd()"
       />
-    </div>
-  </div>
-
-  <!-- Floating preview -->
-  <div
-    v-if="dragging"
-    :style="{
-      position: 'fixed',
-      left: x + 'px',
-      top: y + 'px',
-      pointerEvents: 'none',
-      zIndex: 10000,
-      display: 'flex',
-      flexDirection: 'column',
-    }"
-  >
-    <div
-      v-for="(card, idx) in dragging.cards"
-      :key="card.id"
-      :style="{
-        position: 'absolute',
-        top: idx * 30 + 'px', // 30px overlap
-        left: '0px',
-        zIndex: idx,
-        pointerEvents: 'none',
-      }"
-    >
-      <Card :card="card" :beingDragged="true" :can-be-clicked="false" />
     </div>
   </div>
 </template>

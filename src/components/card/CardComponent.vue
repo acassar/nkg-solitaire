@@ -1,23 +1,40 @@
 <script setup lang="ts">
 import type { Card } from '@/models/Card'
 import CardRow from './components/CardRow.vue'
+import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
+import { ref } from 'vue'
 
-defineEmits<{
+const { startDrag } = useDragAndDrop({ dragEndCallback: () => onDragEnd() })
+
+const emit = defineEmits<{
   (e: 'click'): void
-  (e: 'dragStart', event: DragEvent): void
+  (e: 'dragStart'): void
   (e: 'dragEnd'): void
   (e: 'drop', event: DragEvent): void
 }>()
+const elementRef = ref<HTMLElement | null>(null)
 
 defineProps<{
   card: Card
   beingDragged?: boolean
   canBeClicked: boolean
 }>()
+
+function onPointerDown(e: PointerEvent) {
+  if (elementRef.value) {
+    startDrag(e, elementRef.value)
+    emit('dragStart')
+  }
+}
+
+function onDragEnd() {
+  emit('dragEnd')
+}
 </script>
 
 <template>
   <div
+    ref="elementRef"
     :class="[
       'card',
       { faceUp: card.faceUp, faceDown: !card.faceUp },
@@ -25,11 +42,7 @@ defineProps<{
       { dragging: beingDragged },
     ]"
     @click="canBeClicked ? $emit('click') : null"
-    @dragstart="canBeClicked ? $emit('dragStart', $event) : null"
-    :draggable="canBeClicked"
-    @dragend="$emit('dragEnd')"
-    @dragover.prevent
-    @drop="(e) => $emit('drop', e)"
+    @pointerdown="onPointerDown"
   >
     <template v-if="card.faceUp">
       <div class="row">
@@ -53,7 +66,6 @@ defineProps<{
   background-color: white;
   font-weight: bold;
   font-size: 18px;
-  user-select: none;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -93,5 +105,7 @@ defineProps<{
 
 .dragging {
   opacity: 0.7;
+  z-index: 1000;
+  position: relative;
 }
 </style>
