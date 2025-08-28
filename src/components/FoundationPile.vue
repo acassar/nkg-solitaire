@@ -58,6 +58,7 @@ onMounted(() => {
         <Card
           :can-be-clicked="true"
           :card="card"
+          :can-be-dragged="true"
           @drag-start="dragStart(card, foundation)"
           @drag-end="dragEnd"
         />

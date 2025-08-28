@@ -56,6 +56,7 @@ const handleLastCardDrawn = () => {
           <Card
             :card="card"
             :can-be-clicked="stock.discardPile.cards.at(-1) === card"
+            :can-be-dragged="stock.discardPile.cards.at(-1) === card"
             @drag-start="dragStart(card, stock.discardPile)"
             @drag-end="dragEnd"
           />

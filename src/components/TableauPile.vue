@@ -31,7 +31,7 @@ const handleDragEnd = () => {
         :card
         :being-dragged="dragging?.cards.includes(card)"
         :key="card.id"
-        :can-be-clicked="card.faceUp"
+        :can-be-dragged="card.faceUp"
         @drag-start="dragStart(card, tableau)"
         @drag-end="handleDragEnd()"
       />

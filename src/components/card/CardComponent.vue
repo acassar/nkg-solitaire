@@ -14,14 +14,15 @@ const emit = defineEmits<{
 }>()
 const elementRef = ref<HTMLElement | null>(null)
 
-defineProps<{
+const props = defineProps<{
   card: Card
   beingDragged?: boolean
-  canBeClicked: boolean
+  canBeClicked?: boolean
+  canBeDragged?: boolean
 }>()
 
 function onPointerDown(e: PointerEvent) {
-  if (elementRef.value) {
+  if (elementRef.value && props.canBeDragged) {
     startDrag(e, elementRef.value)
     emit('dragStart')
   }
@@ -38,7 +39,7 @@ function onDragEnd() {
     :class="[
       'card',
       { faceUp: card.faceUp, faceDown: !card.faceUp },
-      { canBeClicked: canBeClicked },
+      { canBeDragged: canBeDragged },
       { dragging: beingDragged },
     ]"
     @click="canBeClicked ? $emit('click') : null"
@@ -73,6 +74,11 @@ function onDragEnd() {
 
 .canBeClicked:hover {
   cursor: pointer;
+}
+
+.canBeDragged:hover {
+  cursor: pointer;
+  transform: scale(1.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
