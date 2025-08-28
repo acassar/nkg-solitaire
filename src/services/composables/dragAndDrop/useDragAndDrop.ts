@@ -78,7 +78,8 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
 
   function moveElement(x: number, y: number) {
     if (!dragState.element) return
-    dragState.element.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    if (x === 0 && y === 0) dragState.element.style.transform = ''
+    else dragState.element.style.transform = `translate3d(${x}px, ${y}px, 0)`
   }
 
   function findZone() {
