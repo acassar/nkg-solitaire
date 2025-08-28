@@ -1,5 +1,5 @@
 // composables/useDragAndDrop.ts
-import { onBeforeUnmount, onMounted, reactive } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, type Ref } from 'vue'
 import { type DropZone, dropZoneState } from './state/dropZoneState'
 import { useMouseListeners } from './useMouseListeners'
 
@@ -16,8 +16,11 @@ type DragState = {
 
 interface UseDragAndDropOptions {
   dragEndCallback?: () => void
+  allowFreeDrag?: Ref<boolean>
+  allowDropOnZone?: Ref<boolean>
 }
 
+// TODO: add a callback to handle the drag start
 export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
   const {
     registerPointerMoveListener,
@@ -149,11 +152,17 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
 
     if (zone) {
       zone.onDrop()
-    } else {
+      if (!options.allowDropOnZone?.value) {
+        moveElement(dragState.elementOriginalX, dragState.elementOriginalY)
+      }
+    } else if (!options.allowFreeDrag?.value) {
       // Return the element to its original position if no drop zone found
       moveElement(dragState.elementOriginalX, dragState.elementOriginalY)
     }
 
+    handleHovering()
+
+    // Release the pointer capture
     try {
       el.releasePointerCapture(dragState.pointerId!)
     } catch {}
