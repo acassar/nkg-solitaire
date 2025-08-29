@@ -1,10 +1,9 @@
-import type { Card } from '@/models/Card'
+import { Card } from '@/models/Card'
 import { createDeck } from './deck'
 import { Tableau } from '@/models/Tableau'
 import { Foundation } from '@/models/Foundation'
 import { DrawPile } from '@/models/DrawPile'
 import { DiscardPile } from '@/models/DiscardPile'
-import { v4 } from 'uuid'
 
 type SevenTableau = [Tableau, Tableau, Tableau, Tableau, Tableau, Tableau, Tableau]
 type FourFoundation = [Foundation, Foundation, Foundation, Foundation]
@@ -31,10 +30,7 @@ export function initGame(): GameState {
 
     for (let i = 0; i <= col; i++) {
       const card = deck[deckIndex++]
-      cards.push({
-        ...card,
-        faceUp: i === col, // only the last card is face up
-      })
+      cards.push(new Card(card.value, card.suit, i === col))
     }
 
     tableau.push(new Tableau(cards))
@@ -67,25 +63,16 @@ export function initGame(): GameState {
 export const initDevGame = (): GameState => {
   return {
     tableau: [
+      new Tableau([new Card(13, 'hearts', false), new Card(11, 'spades', true)]),
+      new Tableau([new Card(11, 'clubs', false), new Card(10, 'diamonds', true)]),
+      new Tableau([new Card(9, 'hearts', false), new Card(12, 'diamonds', true)]),
+      new Tableau([new Card(13, 'spades', true)]),
       new Tableau([
-        { id: v4(), value: 13, suit: 'hearts', faceUp: false },
-        { id: v4(), value: 11, suit: 'spades', faceUp: true },
+        new Card(3, 'hearts', false),
+        new Card(2, 'hearts', false),
+        new Card(1, 'hearts', true),
       ]),
-      new Tableau([
-        { id: v4(), value: 11, suit: 'clubs', faceUp: false },
-        { id: v4(), value: 10, suit: 'diamonds', faceUp: true },
-      ]),
-      new Tableau([
-        { id: v4(), value: 9, suit: 'hearts', faceUp: false },
-        { id: v4(), value: 12, suit: 'diamonds', faceUp: true },
-      ]),
-      new Tableau([{ id: v4(), value: 13, suit: 'spades', faceUp: true }]),
-      new Tableau([
-        { id: v4(), value: 3, suit: 'hearts', faceUp: false },
-        { id: v4(), value: 2, suit: 'hearts', faceUp: false },
-        { id: v4(), value: 1, suit: 'hearts', faceUp: true },
-      ]),
-      new Tableau([{ id: v4(), faceUp: true, suit: 'spades', value: 3 }]),
+      new Tableau([new Card(3, 'spades', true)]),
       new Tableau([]),
     ] as SevenTableau,
     foundations: [
@@ -95,10 +82,7 @@ export const initDevGame = (): GameState => {
       new Foundation([]),
     ] as FourFoundation,
     stock: {
-      drawPile: new DrawPile([
-        { faceUp: false, id: v4(), suit: 'clubs', value: 13 },
-        { faceUp: false, id: v4(), suit: 'clubs', value: 12 },
-      ]),
+      drawPile: new DrawPile([new Card(13, 'clubs', false), new Card(12, 'clubs', false)]),
       discardPile: new DiscardPile(),
     },
     deck: createDeck(),

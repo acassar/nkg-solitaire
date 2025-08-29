@@ -1,10 +1,13 @@
+import { v4 } from 'uuid'
 import type { Card } from './Card'
 
 export abstract class Pile {
   cards: Card[]
+  id: string
 
   constructor(cards: Card[] = []) {
     this.cards = cards
+    this.id = v4()
   }
 
   addCard(card: Card) {
