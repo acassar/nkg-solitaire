@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
 import Card from './card/CardComponent.vue'
 import { useDragKey } from '@/constants/provideKeys'
@@ -12,19 +12,25 @@ if (!useDrag) {
   )
 }
 
-defineProps<{
+const props = defineProps<{
   tableau: Tableau
 }>()
 
-const { dragStart, dragEnd, dragging } = useDrag
+const tableauRef = ref<HTMLDivElement>()
+
+const { dragStart, dragEnd, dragging, drop } = useDrag
 
 const handleDragEnd = () => {
   dragEnd()
 }
+
+const handleDrop = () => {
+  drop(props.tableau)
+}
 </script>
 
 <template>
-  <div class="pile">
+  <div ref="tableauRef" class="pile">
     <div v-if="tableau.cards.length === 0" class="card empty" @dragover.prevent></div>
     <div v-else class="card-container" v-for="card in tableau.cards" :key="card.id">
       <Card
@@ -32,8 +38,10 @@ const handleDragEnd = () => {
         :being-dragged="dragging?.cards.includes(card)"
         :key="card.id"
         :can-be-dragged="card.faceUp"
+        :is-drop-zone="card.faceUp && !dragging?.cards.includes(card)"
         @drag-start="dragStart(card, tableau)"
         @drag-end="handleDragEnd()"
+        @drop="handleDrop()"
       />
     </div>
   </div>

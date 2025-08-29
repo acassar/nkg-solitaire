@@ -2,15 +2,18 @@
 import type { Card } from '@/models/Card'
 import CardRow from './components/CardRow.vue'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { dropZoneState } from '@/services/composables/dragAndDrop/state/dropZoneState'
 
-const { startDrag } = useDragAndDrop({ dragEndCallback: () => onDragEnd() })
+const { startDrag, registerDropZone, unregisterDropZone } = useDragAndDrop({
+  dragEndCallback: () => onDragEnd(),
+})
 
 const emit = defineEmits<{
   (e: 'click'): void
   (e: 'dragStart'): void
   (e: 'dragEnd'): void
-  (e: 'drop', event: DragEvent): void
+  (e: 'drop'): void
 }>()
 const elementRef = ref<HTMLElement | null>(null)
 
@@ -19,6 +22,7 @@ const props = defineProps<{
   beingDragged?: boolean
   canBeClicked?: boolean
   canBeDragged?: boolean
+  isDropZone?: boolean
 }>()
 
 function onPointerDown(e: PointerEvent) {
@@ -31,6 +35,42 @@ function onPointerDown(e: PointerEvent) {
 function onDragEnd() {
   emit('dragEnd')
 }
+
+function onHover() {
+  elementRef.value?.classList.add('hover')
+  console.log(dropZoneState.zones)
+}
+
+function onStopHovering() {
+  elementRef.value?.classList.remove('hover')
+}
+
+const handleDropZone = () => {
+  if (props.isDropZone && elementRef.value) {
+    registerDropZone({
+      id: props.card.id,
+      el: elementRef.value,
+      onDrop: () => emit('drop'),
+      onHover: onHover,
+      onStopHovering: onStopHovering,
+    })
+  } else {
+    unregisterDropZone(props.card.id)
+  }
+}
+
+onMounted(() => {
+  handleDropZone()
+})
+
+onBeforeUnmount(() => handleDropZone())
+
+watch(
+  () => props.isDropZone,
+  () => {
+    handleDropZone()
+  },
+)
 </script>
 
 <template>
@@ -70,6 +110,11 @@ function onDragEnd() {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.card.hover {
+  border: 1px solid #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
 .canBeClicked:hover {

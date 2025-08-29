@@ -75,6 +75,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   position: relative;
+  z-index: 1;
 }
 
 .card-container {
