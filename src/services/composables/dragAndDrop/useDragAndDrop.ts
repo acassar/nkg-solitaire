@@ -1,6 +1,6 @@
 // composables/useDragAndDrop.ts
 import { onBeforeUnmount, onMounted, reactive, type Ref } from 'vue'
-import { type DropZone, dropZoneState } from './state/dropZoneState'
+import { type DropZone, useDropZones } from './useDropZones'
 import { useMouseListeners } from './useMouseListeners'
 
 type DragState = {
@@ -29,6 +29,8 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
     unregisterPointerUpListener,
   } = useMouseListeners()
 
+  const { sortedZones: zones, addZone, removeZone } = useDropZones()
+
   const dragState = reactive<DragState>({
     dragging: false,
     elements: [],
@@ -42,12 +44,12 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
 
   /** Register a drop zone */
   function registerDropZone(props: DropZone) {
-    dropZoneState.zones.push(props)
+    addZone(props)
   }
 
   /** Unregister a drop zone */
   function unregisterDropZone(id: string) {
-    dropZoneState.zones = dropZoneState.zones.filter((z) => z.id !== id)
+    removeZone(id)
   }
 
   /** Starts a drag operation */
@@ -98,7 +100,7 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
     const centerX = rect.left + rect.width / 2
     const centerY = rect.top + rect.height / 2
 
-    const zone = dropZoneState.zones.find((z) => {
+    const zone = zones.value.find((z) => {
       const zr = z.el.getBoundingClientRect()
       return centerX >= zr.left && centerX <= zr.right && centerY >= zr.top && centerY <= zr.bottom
     })
