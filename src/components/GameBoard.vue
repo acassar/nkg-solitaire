@@ -24,8 +24,11 @@ provide(useDragKey, useDrag)
       </div>
     </div>
 
-    <div class="tableau">
-      <TableauPile v-for="(pile, i) in gameState.tableau" :key="i" :tableau="pile" />
+    <div class="center-area">
+      <div class="tableau">
+        <TableauPile v-for="(pile, i) in gameState.tableau" :key="i" :tableau="pile" />
+      </div>
+      <div></div>
     </div>
   </div>
 </template>
@@ -34,6 +37,8 @@ provide(useDragKey, useDrag)
 .game-board {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  height: 100%;
   padding: 1rem;
   gap: 1rem;
 }
@@ -52,5 +57,13 @@ provide(useDragKey, useDrag)
   display: flex;
   gap: 1rem;
   justify-content: center;
+}
+
+.center-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  flex: 1;
 }
 </style>

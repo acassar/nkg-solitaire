@@ -40,7 +40,7 @@ const handleDragStart = (selectedCard: CardModel, tableau: Tableau, event: Point
         :key="card.id"
         :can-be-dragged="card.faceUp"
         :is-drop-zone="card.faceUp && !dragging?.cards.includes(card)"
-        :z-index="index"
+        :z-index="index + 1"
         @drag-start="(e) => handleDragStart(card, tableau, e)"
         @drop="handleDrop()"
       />

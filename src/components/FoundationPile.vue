@@ -26,12 +26,12 @@ const { registerDropZone } = useDragAndDrop()
 const onHover = () => {
   if (!foundationRef.value) throw Error('Ref non montée')
 
-  foundationRef.value.style.backgroundColor = 'grey'
+  foundationRef.value.style.scale = '1.1'
 }
 
 const onStopHovering = () => {
   if (!foundationRef.value) throw Error('Ref non montée')
-  foundationRef.value.style.backgroundColor = ''
+  foundationRef.value.style.scale = '1'
 }
 
 onMounted(() => {
@@ -59,12 +59,11 @@ onMounted(() => {
           :can-be-clicked="true"
           :card="card"
           :can-be-dragged="true"
-          :z-index="index"
+          :z-index="index + 1"
           @drag-start="(e) => startCardDrag(card, foundation, e)"
         />
       </div>
     </template>
-    <div v-else class="card empty">×</div>
   </div>
 </template>
 
@@ -76,6 +75,13 @@ onMounted(() => {
   flex-direction: column;
   position: relative;
   z-index: 1;
+
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #fff;
+  padding: 0.5rem;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .card-container {
