@@ -20,7 +20,7 @@ const props = defineProps<{
 
 const foundationRef = ref<HTMLElement | null>(null)
 
-const { drop, dragStart, dragEnd } = useDrag
+const { handleCardMove, startCardDrag } = useDrag
 const { registerDropZone } = useDragAndDrop()
 
 const onHover = () => {
@@ -40,7 +40,7 @@ onMounted(() => {
     id: v4(),
     el: foundationRef.value,
     onHover: onHover,
-    onDrop: () => drop(props.foundation),
+    onDrop: () => handleCardMove(props.foundation),
     onStopHovering: onStopHovering,
   })
 })
@@ -59,8 +59,7 @@ onMounted(() => {
           :can-be-clicked="true"
           :card="card"
           :can-be-dragged="true"
-          @drag-start="dragStart(card, foundation)"
-          @drag-end="dragEnd"
+          @drag-start="(e) => startCardDrag(card, foundation, e)"
         />
       </div>
     </template>

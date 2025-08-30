@@ -19,18 +19,14 @@ const props = defineProps<{
 
 const tableauRef = ref<HTMLDivElement>()
 
-const { dragStart, dragEnd, dragging, drop } = useDrag
-
-const handleDragEnd = () => {
-  dragEnd()
-}
+const { startCardDrag, dragging, handleCardMove } = useDrag
 
 const handleDrop = () => {
-  drop(props.tableau)
+  handleCardMove(props.tableau)
 }
 
 const handleDragStart = (selectedCard: CardModel, tableau: Tableau, event: PointerEvent) => {
-  dragStart(selectedCard, tableau, event)
+  startCardDrag(selectedCard, tableau, event)
 }
 </script>
 
@@ -45,7 +41,6 @@ const handleDragStart = (selectedCard: CardModel, tableau: Tableau, event: Point
         :can-be-dragged="card.faceUp"
         :is-drop-zone="card.faceUp && !dragging?.cards.includes(card)"
         @drag-start="(e) => handleDragStart(card, tableau, e)"
-        @drag-end="handleDragEnd()"
         @drop="handleDrop()"
       />
     </div>

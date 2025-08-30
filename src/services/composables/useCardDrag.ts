@@ -7,9 +7,9 @@ import { useDragAndDrop } from './dragAndDrop/useDragAndDrop'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
-  const { startDrag } = useDragAndDrop({ dragEndCallback: () => dragEnd() })
+  const { startDrag } = useDragAndDrop({ dragEndCallback: () => stopCardDrag() })
 
-  const dragStart = (card: Card, from: Pile, event: PointerEvent) => {
+  const startCardDrag = (card: Card, from: Pile, event: PointerEvent) => {
     console.info('Drag started:', card, 'from:', from)
 
     const stackedCards = from.getStackedCards(card.id)
@@ -31,13 +31,13 @@ export const useCardDrag = () => {
     if (!card) return
   }
 
-  const dragEnd = () => {
+  const stopCardDrag = () => {
     console.info('Drag ended')
     dragging.value = undefined
   }
 
   // Main drop handler
-  const drop = (target: Pile) => {
+  const handleCardMove = (target: Pile) => {
     console.info('Drop event:', target)
     try {
       if (!dragging.value) {
@@ -57,9 +57,9 @@ export const useCardDrag = () => {
   }
 
   return {
-    dragStart,
-    dragEnd,
-    drop,
+    startCardDrag,
+    stopCardDrag,
+    handleCardMove,
     dragging,
   }
 }

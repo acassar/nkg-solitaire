@@ -15,7 +15,7 @@ if (!useDrag) {
 
 const stock = defineModel<{ drawPile: DrawPile; discardPile: DiscardPile }>({ required: true })
 
-const { dragStart, dragEnd } = useDrag
+const { startCardDrag } = useDrag
 
 const drawCard = () => {
   if (stock.value.drawPile.cards.length === 0) handleLastCardDrawn()
@@ -57,8 +57,7 @@ const handleLastCardDrawn = () => {
             :card="card"
             :can-be-clicked="stock.discardPile.cards.at(-1) === card"
             :can-be-dragged="stock.discardPile.cards.at(-1) === card"
-            @drag-start="dragStart(card, stock.discardPile)"
-            @drag-end="dragEnd"
+            @drag-start="(e) => startCardDrag(card, stock.discardPile, e)"
           />
         </div>
       </template>
