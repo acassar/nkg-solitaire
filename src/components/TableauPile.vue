@@ -33,13 +33,14 @@ const handleDragStart = (selectedCard: CardModel, tableau: Tableau, event: Point
 <template>
   <div ref="tableauRef" class="pile">
     <div v-if="tableau.cards.length === 0" class="card empty" @dragover.prevent></div>
-    <div v-else class="card-container" v-for="card in tableau.cards" :key="card.id">
+    <div v-else class="card-container" v-for="(card, index) in tableau.cards" :key="card.id">
       <Card
         :card
         :being-dragged="dragging?.cards.includes(card)"
         :key="card.id"
         :can-be-dragged="card.faceUp"
         :is-drop-zone="card.faceUp && !dragging?.cards.includes(card)"
+        :z-index="index"
         @drag-start="(e) => handleDragStart(card, tableau, e)"
         @drop="handleDrop()"
       />

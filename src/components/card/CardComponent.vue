@@ -15,6 +15,7 @@ const elementRef = ref<HTMLElement | null>(null)
 
 const props = defineProps<{
   card: Card
+  zIndex?: number
   beingDragged?: boolean
   canBeClicked?: boolean
   canBeDragged?: boolean
@@ -73,6 +74,7 @@ watch(
       { canBeDragged: canBeDragged },
       { dragging: beingDragged },
     ]"
+    :style="{ zIndex: beingDragged ? 1000 : zIndex }"
     @click="canBeClicked ? $emit('click') : null"
     @pointerdown="onPointerDown"
   >
@@ -147,7 +149,6 @@ watch(
 
 .dragging {
   opacity: 0.7;
-  z-index: 1000;
   position: relative;
 }
 </style>
