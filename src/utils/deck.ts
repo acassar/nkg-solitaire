@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from 'uuid'
-import type { Card, Suit } from '@/models/Card'
+import { Card } from '@/models/Card'
+import type { Suit } from '@/models/Card'
 
 const suits: Suit[] = ['hearts', 'diamonds', 'clubs', 'spades']
 
@@ -8,12 +8,7 @@ export function createDeck(): Card[] {
 
   for (const suit of suits) {
     for (let value = 1; value <= 13; value++) {
-      deck.push({
-        id: uuidv4(), // identifiant unique
-        value,
-        suit,
-        faceUp: false,
-      })
+      deck.push(new Card(value, suit, false))
     }
   }
 
