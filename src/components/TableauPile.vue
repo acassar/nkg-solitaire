@@ -4,6 +4,7 @@ import { type TUseDrag } from '@/services/composables/useCardDrag'
 import Card from './card/CardComponent.vue'
 import { useDragKey } from '@/constants/provideKeys'
 import type { Tableau } from '@/models/Tableau'
+import type { Card as CardModel } from '@/models/Card'
 
 const useDrag = inject<TUseDrag>(useDragKey)
 if (!useDrag) {
@@ -27,6 +28,10 @@ const handleDragEnd = () => {
 const handleDrop = () => {
   drop(props.tableau)
 }
+
+const handleDragStart = (selectedCard: CardModel, tableau: Tableau, event: PointerEvent) => {
+  dragStart(selectedCard, tableau, event)
+}
 </script>
 
 <template>
@@ -39,7 +44,7 @@ const handleDrop = () => {
         :key="card.id"
         :can-be-dragged="card.faceUp"
         :is-drop-zone="card.faceUp && !dragging?.cards.includes(card)"
-        @drag-start="dragStart(card, tableau)"
+        @drag-start="(e) => handleDragStart(card, tableau, e)"
         @drag-end="handleDragEnd()"
         @drop="handleDrop()"
       />

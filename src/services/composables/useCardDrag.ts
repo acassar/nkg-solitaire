@@ -3,11 +3,13 @@ import { ref } from 'vue'
 import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
 import { processMoveHandlers } from '../moveHandlers'
+import { useDragAndDrop } from './dragAndDrop/useDragAndDrop'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
+  const { startDrag } = useDragAndDrop({ dragEndCallback: () => dragEnd() })
 
-  const dragStart = (card: Card, from: Pile) => {
+  const dragStart = (card: Card, from: Pile, event: PointerEvent) => {
     console.info('Drag started:', card, 'from:', from)
 
     const stackedCards = from.getStackedCards(card.id)
@@ -17,7 +19,15 @@ export const useCardDrag = () => {
       from: from,
     }
 
-    console.log(stackedCards)
+    const cardElementsToDrag: HTMLElement[] = []
+    stackedCards.forEach((card) => {
+      const cardElement = document.getElementById(card.id)
+      if (cardElement) {
+        cardElementsToDrag.push(cardElement)
+      }
+    })
+
+    startDrag(event, cardElementsToDrag)
     if (!card) return
   }
 

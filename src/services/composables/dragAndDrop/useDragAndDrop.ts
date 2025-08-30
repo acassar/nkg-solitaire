@@ -5,7 +5,7 @@ import { useMouseListeners } from './useMouseListeners'
 
 type DragState = {
   dragging: boolean
-  element: HTMLElement | null | undefined
+  elements: HTMLElement[]
   lastZoneHovered: DropZone | null | undefined
   pointerStartX: number
   pointerStartY: number
@@ -31,7 +31,7 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
 
   const dragState = reactive<DragState>({
     dragging: false,
-    element: null,
+    elements: [],
     lastZoneHovered: null,
     pointerStartX: 0,
     pointerStartY: 0,
@@ -51,15 +51,15 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
   }
 
   /** Starts a drag operation */
-  function startDrag(e: PointerEvent, el: HTMLElement) {
+  function startDrag(e: PointerEvent, el: HTMLElement | HTMLElement[]) {
     e.preventDefault()
     dragState.dragging = true
-    dragState.element = el
+    dragState.elements = Array.isArray(el) ? el : [el]
 
     dragState.pointerId = e.pointerId
-    el.setPointerCapture(dragState.pointerId)
+    dragState.elements.forEach((el) => el.setPointerCapture(dragState.pointerId!))
 
-    const style = getComputedStyle(el)
+    const style = getComputedStyle(dragState.elements[0])
     const matrixMatch = style.transform.match(/matrix.*\((.+)\)/)
 
     // Get the original position of the element
@@ -76,17 +76,21 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
     dragState.pointerStartX = e.clientX
     dragState.pointerStartY = e.clientY
 
-    el.style.zIndex = '1000'
+    dragState.elements.forEach((el) => (el.style.zIndex = '1000'))
   }
 
   function moveElement(x: number, y: number) {
-    if (!dragState.element) return
-    if (x === 0 && y === 0) dragState.element.style.transform = ''
-    else dragState.element.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    if (!dragState.elements?.length) return
+
+    const transformValue = x === 0 && y === 0 ? '' : `translate3d(${x}px, ${y}px, 0)`
+    dragState.elements.forEach((el) => {
+      el.style.transform = transformValue
+    })
   }
 
+  // Find the zone touched from the center of the first element
   function findZone() {
-    const el = dragState.element
+    const el = dragState.elements[0] as HTMLElement
     if (!el) return
 
     // Find the zone touched from the center of the element
@@ -123,7 +127,7 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
    */
   function onPointerMove(e: PointerEvent) {
     // If the element is not being dragged, return
-    if (!dragState.dragging || dragState.pointerId !== e.pointerId || !dragState.element) return
+    if (!dragState.dragging || dragState.pointerId !== e.pointerId || !dragState.elements) return
 
     // Calculate how much the pointer has moved since drag started
     const pointerDeltaX = e.clientX - dragState.pointerStartX
@@ -145,8 +149,8 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
     // If dragging is not in progress or the pointer id does not match, return
     if (!dragState.dragging || dragState.pointerId !== e.pointerId) return
 
-    const el = dragState.element
-    if (!el) return
+    const { elements } = dragState
+    if (!elements?.length) return
 
     const zone = findZone()
 
@@ -164,14 +168,14 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
 
     // Release the pointer capture
     try {
-      el.releasePointerCapture(dragState.pointerId!)
+      elements.forEach((el) => el.releasePointerCapture(dragState.pointerId!))
     } catch {}
 
     // Reset the element
-    el.style.zIndex = ''
+    elements.forEach((el) => (el.style.zIndex = ''))
     dragState.dragging = false
     dragState.pointerId = null
-    dragState.element = null
+    dragState.elements = []
 
     // Call the unique callback passed as parameter
     options.dragEndCallback?.()

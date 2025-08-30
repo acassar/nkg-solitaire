@@ -3,16 +3,12 @@ import type { Card } from '@/models/Card'
 import CardRow from './components/CardRow.vue'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { dropZoneState } from '@/services/composables/dragAndDrop/state/dropZoneState'
 
-const { startDrag, registerDropZone, unregisterDropZone } = useDragAndDrop({
-  dragEndCallback: () => onDragEnd(),
-})
+const { registerDropZone, unregisterDropZone } = useDragAndDrop()
 
 const emit = defineEmits<{
   (e: 'click'): void
-  (e: 'dragStart'): void
-  (e: 'dragEnd'): void
+  (e: 'dragStart', event: PointerEvent): void
   (e: 'drop'): void
 }>()
 const elementRef = ref<HTMLElement | null>(null)
@@ -27,18 +23,12 @@ const props = defineProps<{
 
 function onPointerDown(e: PointerEvent) {
   if (elementRef.value && props.canBeDragged) {
-    startDrag(e, elementRef.value)
-    emit('dragStart')
+    emit('dragStart', e)
   }
-}
-
-function onDragEnd() {
-  emit('dragEnd')
 }
 
 function onHover() {
   elementRef.value?.classList.add('hover')
-  console.log(dropZoneState.zones)
 }
 
 function onStopHovering() {
@@ -76,6 +66,7 @@ watch(
 <template>
   <div
     ref="elementRef"
+    :id="card.id"
     :class="[
       'card',
       { faceUp: card.faceUp, faceDown: !card.faceUp },
