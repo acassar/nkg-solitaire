@@ -59,6 +59,7 @@ onMounted(() => {
           :can-be-clicked="true"
           :card="card"
           :can-be-dragged="true"
+          :z-index="index"
           @drag-start="(e) => startCardDrag(card, foundation, e)"
         />
       </div>
