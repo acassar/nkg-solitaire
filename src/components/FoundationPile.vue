@@ -20,7 +20,7 @@ const props = defineProps<{
 
 const foundationRef = ref<HTMLElement | null>(null)
 
-const { handleCardMove, startCardDrag } = useDrag
+const { handleCardMove, startCardDrag, dragging } = useDrag
 const { registerDropZone } = useDragAndDrop()
 
 const onHover = () => {
@@ -60,6 +60,7 @@ onMounted(() => {
           :card="card"
           :can-be-dragged="true"
           :z-index="index + 1"
+          :being-dragged="dragging?.cards.includes(card)"
           @drag-start="(e) => startCardDrag(card, foundation, e)"
         />
       </div>
@@ -86,6 +87,7 @@ onMounted(() => {
 
 .card-container {
   position: relative;
+  z-index: 1;
 }
 
 .card-container:not(:first-child) {

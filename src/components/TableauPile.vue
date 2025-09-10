@@ -52,6 +52,8 @@ const handleDragStart = (selectedCard: CardModel, tableau: Tableau, event: Point
 .pile {
   display: flex;
   flex-direction: column;
+  z-index: 1;
+  position: relative;
 }
 
 .card-container {
