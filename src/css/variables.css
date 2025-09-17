@@ -1,4 +1,5 @@
 :root {
   --card-width: 60px;
   --card-height: 90px;
+  --card-overlap: 70px;
 }

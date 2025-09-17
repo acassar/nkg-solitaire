@@ -77,12 +77,18 @@ onMounted(() => {
   position: relative;
   z-index: 1;
 
-  border: 1px solid #000;
-  border-radius: 4px;
-  background-color: #fff;
+  border: 2px dashed #34495e;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
   padding: 0.5rem;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.pile:hover {
+  border-color: #3498db;
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
 }
 
 .card-container {

@@ -95,14 +95,15 @@ watch(
 .card {
   width: var(--card-width);
   height: var(--card-height);
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
   font-weight: bold;
   font-size: 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card.hover {
@@ -121,11 +122,12 @@ watch(
 }
 
 .faceDown {
-  background-color: #444;
+  background: linear-gradient(135deg, #2c3e50, #34495e);
   color: transparent;
+  border: 2px solid #34495e;
 }
 .faceUp {
-  background-color: white;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
 }
 
 .row {

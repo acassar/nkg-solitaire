@@ -76,12 +76,20 @@ const handleLastCardDrawn = () => {
   width: var(--card-width);
   height: var(--card-height);
   cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.draw-pile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .discard-pile {
   width: var(--card-width);
   height: var(--card-height);
   position: relative;
+  border-radius: 8px;
 }
 
 .card-container {

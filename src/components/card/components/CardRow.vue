@@ -15,7 +15,7 @@ const suitStyles: Record<Suit, { icon: string; color: string }> = {
 </script>
 
 <template>
-  <div class="value">{{ card.value }}</div>
+  <div class="value">{{ card.getValueString() }}</div>
   <div class="icon" :style="{ color: suitStyles[card.suit!].color }">
     {{ suitStyles[card.suit!].icon }}
   </div>
