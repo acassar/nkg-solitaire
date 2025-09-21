@@ -6,7 +6,7 @@ export class Tableau extends Pile implements Revealable {
   isValidMove(card: Card): boolean {
     // A card can be placed on a tableau if it is one rank lower and of the opposite color
     if (this.isEmpty()) {
-      return card.value === 13 // Cannot place on an empty tableau, except for the king
+      return card.value === 13 // Only a King can be placed on an empty tableau
     }
 
     const { topCard } = this
