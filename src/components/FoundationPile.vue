@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { type TUseDrag } from '@/services/composables/useCardDrag'
-import Card from './card/CardComponent.vue'
-import { Foundation } from '@/models/Foundation'
-import { inject, onMounted, ref } from 'vue'
 import { useDragKey } from '@/constants/provideKeys'
+import { Foundation } from '@/models/Foundation'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
+import { type TUseDrag } from '@/services/composables/useCardDrag'
 import { v4 } from 'uuid'
+import { inject, onMounted, ref } from 'vue'
+import Card from './card/CardComponent.vue'
 
 const useDrag = inject<TUseDrag>(useDragKey)
 if (!useDrag) {

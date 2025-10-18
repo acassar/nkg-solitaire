@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Card from './card/CardComponent.vue'
-import { inject } from 'vue'
-import type { TUseDrag } from '@/services/composables/useCardDrag'
 import { useDragKey } from '@/constants/provideKeys'
-import type { DrawPile } from '@/models/DrawPile'
 import type { DiscardPile } from '@/models/DiscardPile'
+import type { DrawPile } from '@/models/DrawPile'
+import type { TUseDrag } from '@/services/composables/useCardDrag'
+import { inject } from 'vue'
+import Card from './card/CardComponent.vue'
 
 const useDrag = inject<TUseDrag>(useDragKey)
 if (!useDrag) {
@@ -15,7 +15,7 @@ if (!useDrag) {
 
 const stock = defineModel<{ drawPile: DrawPile; discardPile: DiscardPile }>({ required: true })
 
-const { startCardDrag } = useDrag
+const { startCardDrag, dragging } = useDrag
 
 const drawCard = () => {
   if (stock.value.drawPile.cards.length === 0) handleLastCardDrawn()
@@ -56,6 +56,7 @@ const handleLastCardDrawn = () => {
           <Card
             :card="card"
             :can-be-clicked="stock.discardPile.cards.at(-1) === card"
+            :being-dragged="dragging?.cards.includes(card) ?? false"
             :can-be-dragged="stock.discardPile.cards.at(-1) === card"
             @drag-start="(e) => startCardDrag(card, stock.discardPile, e)"
           />

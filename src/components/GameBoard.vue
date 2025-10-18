@@ -23,7 +23,7 @@ const startNewGame = () => {
 </script>
 
 <template>
-  <div class="game-board">
+  <div id="game-board">
     <GameCompletion />
     
     <div class="game-header">

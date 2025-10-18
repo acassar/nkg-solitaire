@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { inject, ref, computed } from 'vue'
-import { type TUseDrag } from '@/services/composables/useCardDrag'
-import Card from './card/CardComponent.vue'
 import { useDragKey } from '@/constants/provideKeys'
-import type { Tableau } from '@/models/Tableau'
 import type { Card as CardModel } from '@/models/Card'
+import type { Tableau } from '@/models/Tableau'
+import { type TUseDrag } from '@/services/composables/useCardDrag'
+import { computed, inject, ref } from 'vue'
+import Card from './card/CardComponent.vue'
 
 const useDrag = inject<TUseDrag>(useDragKey)
 if (!useDrag) {
@@ -36,11 +36,11 @@ const pileHeight = computed(() => {
   const cardHeight = parseInt(rootStyles.getPropertyValue('--card-height'))
   const cardOverlap = parseInt(rootStyles.getPropertyValue('--card-overlap'))
   const numCards = props.tableau.cards.length
-  
+
   if (numCards === 0) {
     return cardHeight
   }
-  
+
   // Height = first card height + (number of additional cards * (card height - overlap))
   return cardHeight + (numCards - 1) * (cardHeight - cardOverlap)
 })

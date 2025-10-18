@@ -78,7 +78,19 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
     dragState.pointerStartX = e.clientX
     dragState.pointerStartY = e.clientY
 
-    dragState.elements.forEach((el) => (el.style.zIndex = '1000'))
+    dragState.elements.forEach((el, index) => {
+      // Save parent and next sibling to allow re-insertion/reset position later
+      ;(el as HTMLElement & { __originalParent?: Node | null }).__originalParent = el.parentNode
+      ;(el as HTMLElement & { __originalNextSibling?: Node | null }).__originalNextSibling =
+        el.nextSibling
+
+      el.style.position = 'absolute'
+      el.style.left = `${dragState.pointerStartX - el.clientWidth / 2}px`
+      el.style.top = `${dragState.pointerStartY - (el.clientHeight - index * 50) / 2}px`
+      el.style.zIndex = '99999'
+
+      document.body.appendChild(el)
+    })
   }
 
   function moveElement(x: number, y: number) {
@@ -178,6 +190,22 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
     dragState.dragging = false
     dragState.pointerId = null
     dragState.elements = []
+    // Restore original position and parent
+    elements.forEach((el) => {
+      el.style.position = ''
+      el.style.left = ''
+      el.style.top = ''
+      el.style.zIndex = ''
+      el.style.transform = ''
+
+      const originalParent = (el as HTMLElement & { __originalParent?: Node | null })
+        .__originalParent
+      const originalNextSibling = (el as HTMLElement & { __originalNextSibling?: Node | null })
+        .__originalNextSibling
+      if (originalParent) {
+        originalParent.insertBefore(el, originalNextSibling ?? null)
+      }
+    })
 
     // Call the unique callback passed as parameter
     options.dragEndCallback?.()
