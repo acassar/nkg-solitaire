@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import Stock from './StockComponent.vue'
-import FoundationPile from './FoundationPile.vue'
-import TableauPile from './TableauPile.vue'
-import GameCompletion from './GameCompletion.vue'
-import GameStats from './GameStats.vue'
-import GameHelp from './GameHelp.vue'
-import { storeToRefs } from 'pinia'
-import { useGameStateStore } from '@/stores/gameStateStore'
-import { useCardDrag } from '@/services/composables/useCardDrag'
 import { useDragKey } from '@/constants/provideKeys'
+import { useCardDrag } from '@/services/composables/useCardDrag'
+import { useGameStateStore } from '@/stores/gameStateStore'
+import { storeToRefs } from 'pinia'
 import { provide } from 'vue'
+import FoundationPile from './FoundationPile.vue'
+import GameCompletion from './GameCompletion.vue'
+import GameHelp from './GameHelp.vue'
+import GameStats from './GameStats.vue'
+import Stock from './StockComponent.vue'
+import TableauPile from './TableauPile.vue'
 
 const gameStore = useGameStateStore()
 const { gameState } = storeToRefs(gameStore)
@@ -25,18 +25,16 @@ const startNewGame = () => {
 <template>
   <div id="game-board">
     <GameCompletion />
-    
+
     <div class="game-header">
       <h1 class="game-title">Solitaire</h1>
       <div class="header-controls">
         <GameStats />
         <GameHelp />
-        <button @click="startNewGame" class="new-game-btn">
-          Nouvelle Partie
-        </button>
+        <button @click="startNewGame" class="new-game-btn">Nouvelle Partie</button>
       </div>
     </div>
-    
+
     <div class="top-row">
       <Stock v-model="gameState.stock" />
 
@@ -68,7 +66,7 @@ const startNewGame = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
+  padding: 1rem 1rem;
   margin-bottom: 1rem;
 }
 
@@ -112,6 +110,7 @@ const startNewGame = () => {
 .top-row {
   display: flex;
   justify-content: space-around;
+  height: calc((var(--card-height) - var(--card-overlap)) * 14);
 }
 
 .foundations {

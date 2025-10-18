@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { Card } from '@/models/Card'
-import CardRow from './components/CardRow.vue'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import CardRow from './components/CardRow.vue'
 
 const { registerDropZone, unregisterDropZone } = useDragAndDrop()
 
@@ -117,7 +117,8 @@ watch(
 
 .canBeDragged:hover {
   cursor: pointer;
-  transform: scale(1.1);
+  transform: scale(1.2);
+  transform: translateY(-10px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
@@ -126,6 +127,7 @@ watch(
   color: transparent;
   border: 2px solid #34495e;
 }
+
 .faceUp {
   background: linear-gradient(135deg, #ffffff, #f8f9fa);
 }
