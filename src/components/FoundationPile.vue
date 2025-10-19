@@ -3,7 +3,6 @@ import { useDragKey } from '@/constants/provideKeys'
 import { Foundation } from '@/models/Foundation'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
-import { v4 } from 'uuid'
 import { inject, onMounted, ref } from 'vue'
 import Card from './card/CardComponent.vue'
 
@@ -37,7 +36,7 @@ const onStopHovering = () => {
 onMounted(() => {
   if (!foundationRef.value) throw Error('Ref non montée')
   registerDropZone({
-    id: v4(),
+    id: props.foundation.id,
     el: foundationRef.value,
     onHover: onHover,
     onDrop: () => handleCardMove(props.foundation),

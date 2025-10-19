@@ -2,8 +2,9 @@
 import { useDragKey } from '@/constants/provideKeys'
 import type { Card as CardModel } from '@/models/Card'
 import type { Tableau } from '@/models/Tableau'
+import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 import Card from './card/CardComponent.vue'
 
 const useDrag = inject<TUseDrag>(useDragKey)
@@ -20,6 +21,7 @@ const props = defineProps<{
 const tableauRef = ref<HTMLDivElement>()
 
 const { startCardDrag, dragging, handleCardMove } = useDrag
+const { registerDropZone } = useDragAndDrop()
 
 const handleDrop = () => {
   handleCardMove(props.tableau)
@@ -44,6 +46,28 @@ const pileHeight = computed(() => {
   // Height = first card height + (number of additional cards * (card height - overlap))
   return cardHeight + (numCards - 1) * (cardHeight - cardOverlap)
 })
+
+onMounted(() => {
+  if (!tableauRef.value) throw Error('Ref non montée')
+  registerDropZone({
+    id: props.tableau.id,
+    el: tableauRef.value,
+    onHover: onHover,
+    onDrop: () => handleCardMove(props.tableau),
+    onStopHovering: onStopHovering,
+  })
+})
+
+const onHover = () => {
+  if (!tableauRef.value) throw Error('Ref non montée')
+
+  tableauRef.value.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'
+}
+
+const onStopHovering = () => {
+  if (!tableauRef.value) throw Error('Ref non montée')
+  tableauRef.value.style.backgroundColor = 'transparent'
+}
 </script>
 
 <template>

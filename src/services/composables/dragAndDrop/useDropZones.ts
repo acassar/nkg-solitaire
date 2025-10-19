@@ -1,4 +1,4 @@
-import { reactive, computed } from 'vue'
+import { computed, reactive } from 'vue'
 
 export type DropZone = {
   id: string
@@ -26,6 +26,7 @@ export function useDropZones() {
 
   // Helper functions for managing zones
   const addZone = (zone: DropZone) => {
+    zone.el.classList.add('drop-zone')
     state.zones.push(zone)
   }
 
