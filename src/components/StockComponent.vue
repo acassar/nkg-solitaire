@@ -20,7 +20,7 @@ const { startCardDrag, dragging } = useDrag
 const drawCard = () => {
   if (stock.value.drawPile.cards.length === 0) handleLastCardDrawn()
 
-  const card = stock.value.drawPile.cards.shift()
+  const card = stock.value.drawPile.cards.pop()
   if (card) {
     card.faceUp = true
     stock.value.discardPile.cards.push(card)
@@ -37,12 +37,12 @@ const handleLastCardDrawn = () => {
 <template>
   <div class="stock">
     <div class="draw-pile" @click="drawCard">
-      <Card
-        :can-be-clicked="false"
-        :card="stock.drawPile.cards[0]"
-        v-if="stock.drawPile.cards.length > 0"
-      />
-      <div v-else class="card empty">×</div>
+      <div v-if="stock.drawPile.cards.length === 0" class="card empty">×</div>
+      <template v-else>
+        <div v-for="card in stock.drawPile.cards.slice(-3)" :key="card.id" class="card-container">
+          <Card :can-be-clicked="false" :card="card" :can-be-dragged="false" />
+        </div>
+      </template>
     </div>
 
     <div class="discard-pile">
@@ -99,5 +99,9 @@ const handleLastCardDrawn = () => {
 
 .card-container:not(:first-child) {
   margin-top: -70px;
+}
+
+.card:hover {
+  cursor: pointer !important;
 }
 </style>

@@ -8,3 +8,25 @@
   font-size: 24px;
   color: #bbb;
 }
+
+/* Card hover effects */
+.card.canBeClicked:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card:not(.canBeClicked):not(.canBeDragged):hover {
+  cursor: default;
+}
+
+.card:hover:not(.dragging) {
+  transition: all 0.2s ease;
+}
+
+/* Dragging state */
+.dragging {
+  opacity: 0.8;
+  transform: rotate(5deg) scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}

@@ -72,6 +72,7 @@ watch(
       'card',
       { faceUp: card.faceUp, faceDown: !card.faceUp },
       { canBeDragged: canBeDragged },
+      { canBeClicked: canBeClicked },
       { dragging: beingDragged },
     ]"
     :style="{ zIndex: beingDragged ? 1000 : zIndex }"
