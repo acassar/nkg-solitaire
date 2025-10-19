@@ -178,7 +178,9 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
       moveElement(dragState.elementOriginalX, dragState.elementOriginalY)
     }
 
-    handleHovering()
+    // Clean up hover state before ending drag
+    dragState.lastZoneHovered?.onStopHovering?.()
+    dragState.lastZoneHovered = null
 
     // Release the pointer capture
     try {
