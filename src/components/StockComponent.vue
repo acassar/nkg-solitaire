@@ -2,7 +2,10 @@
 import { useDragKey } from '@/constants/provideKeys'
 import type { DiscardPile } from '@/models/DiscardPile'
 import type { DrawPile } from '@/models/DrawPile'
+import { Score } from '@/models/Score'
 import type { TUseDrag } from '@/services/composables/useCardDrag'
+import { useGameStateStore } from '@/stores/gameStateStore'
+import { storeToRefs } from 'pinia'
 import { inject } from 'vue'
 import Card from './card/CardComponent.vue'
 
@@ -12,6 +15,9 @@ if (!useDrag) {
     'useDrag is not provided. Ensure you are using this component within a provider context.',
   )
 }
+
+const gameStore = useGameStateStore()
+const { scoreService } = storeToRefs(gameStore)
 
 const stock = defineModel<{ drawPile: DrawPile; discardPile: DiscardPile }>({ required: true })
 
@@ -24,6 +30,7 @@ const drawCard = () => {
   if (card) {
     card.faceUp = true
     stock.value.discardPile.cards.push(card)
+    scoreService.value.incrementMoves()
   }
 }
 
@@ -31,6 +38,7 @@ const handleLastCardDrawn = () => {
   stock.value.drawPile.cards = stock.value.discardPile.cards
   stock.value.discardPile.cards = []
   stock.value.drawPile.cards.forEach((card) => (card.faceUp = false))
+  scoreService.value.addScore(Score.SCORES.WASTE_CYCLE)
 }
 </script>
 

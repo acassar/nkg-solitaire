@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useGameStateStore } from '@/stores/gameStateStore'
 import { getCompletionStats } from '@/services/gameCompletionService'
+import { useGameStateStore } from '@/stores/gameStateStore'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 const gameStore = useGameStateStore()
-const { gameState } = storeToRefs(gameStore)
+const { gameState, gameStats } = storeToRefs(gameStore)
 
 const completionStats = computed(() => getCompletionStats(gameState.value))
-const gameStats = computed(() => gameStore.getStats())
 
 const startNewGame = () => {
   gameStore.startNewGame()
@@ -19,7 +18,7 @@ const getSuitIcon = (suit: string | null) => {
     spades: '♠',
     hearts: '♥',
     diamonds: '♦',
-    clubs: '♣'
+    clubs: '♣',
   }
   return suitIcons[suit || ''] || '?'
 }
@@ -32,7 +31,7 @@ const formatTime = (milliseconds: number): string => {
   const seconds = Math.floor(milliseconds / 1000)
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
-  
+
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 </script>
@@ -42,10 +41,10 @@ const formatTime = (milliseconds: number): string => {
     <div class="victory-modal">
       <h1>🎉 Félicitations ! 🎉</h1>
       <p>Vous avez gagné le solitaire !</p>
-      
+
       <div class="stats">
         <h3>Statistiques Finales :</h3>
-        
+
         <div class="final-stats">
           <div class="stat-row">
             <span class="stat-label">Score Final:</span>
@@ -57,22 +56,21 @@ const formatTime = (milliseconds: number): string => {
           </div>
           <div class="stat-row">
             <span class="stat-label">Temps:</span>
-            <span class="stat-value">{{ formatTime(gameStats.timeElapsed) }}</span>
+            <span class="stat-value">{{
+              formatTime(Date.now() - gameStore.scoreService.startTime)
+            }}</span>
           </div>
         </div>
-        
+
         <div class="foundation-stats">
           <h4>Fondations Complétées:</h4>
           <div class="foundation-grid">
-            <div 
-              v-for="(stat, index) in completionStats.foundationStats" 
+            <div
+              v-for="(stat, index) in completionStats.foundationStats"
               :key="index"
               class="foundation-stat"
             >
-              <span 
-                class="suit-icon" 
-                :style="{ color: getSuitColor(stat.suit) }"
-              >
+              <span class="suit-icon" :style="{ color: getSuitColor(stat.suit) }">
                 {{ getSuitIcon(stat.suit) }}
               </span>
               <span class="cards-count">{{ stat.cardsCount }}/13</span>
@@ -82,9 +80,7 @@ const formatTime = (milliseconds: number): string => {
         </div>
       </div>
 
-      <button @click="startNewGame" class="new-game-btn">
-        Nouvelle Partie
-      </button>
+      <button @click="startNewGame" class="new-game-btn">Nouvelle Partie</button>
     </div>
   </div>
 
@@ -94,8 +90,8 @@ const formatTime = (milliseconds: number): string => {
       Progression: {{ completionStats.completedFoundations }}/4 fondations complétées
     </div>
     <div class="progress-bar">
-      <div 
-        class="progress-fill" 
+      <div
+        class="progress-fill"
         :style="{ width: `${(completionStats.completedFoundations / 4) * 100}%` }"
       ></div>
     </div>

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useDragKey } from '@/constants/provideKeys'
 import { Foundation } from '@/models/Foundation'
+import { Score } from '@/models/Score'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
+import { useGameStateStore } from '@/stores/gameStateStore'
+import { storeToRefs } from 'pinia'
 import { inject, onMounted, ref } from 'vue'
 import Card from './card/CardComponent.vue'
 
@@ -12,6 +15,9 @@ if (!useDrag) {
     'useDrag is not provided. Ensure you are using this component within a provider context.',
   )
 }
+
+const gameStore = useGameStateStore()
+const { scoreService } = storeToRefs(gameStore)
 
 const props = defineProps<{
   foundation: Foundation
@@ -33,13 +39,19 @@ const onStopHovering = () => {
   foundationRef.value.style.scale = '1'
 }
 
+const onDrop = () => {
+  handleCardMove(props.foundation)
+  //TODO: handle multiple passes
+  scoreService.value.addScore(Score.SCORES.TABLEAU_TO_FOUNDATION)
+}
+
 onMounted(() => {
   if (!foundationRef.value) throw Error('Ref non montée')
   registerDropZone({
     id: props.foundation.id,
     el: foundationRef.value,
     onHover: onHover,
-    onDrop: () => handleCardMove(props.foundation),
+    onDrop: onDrop,
     onStopHovering: onStopHovering,
   })
 })

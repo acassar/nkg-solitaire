@@ -1,9 +1,9 @@
 import { Card } from '@/models/Card'
-import { createDeck } from './deck'
-import { Tableau } from '@/models/Tableau'
-import { Foundation } from '@/models/Foundation'
-import { DrawPile } from '@/models/DrawPile'
 import { DiscardPile } from '@/models/DiscardPile'
+import { DrawPile } from '@/models/DrawPile'
+import { Foundation } from '@/models/Foundation'
+import { Tableau } from '@/models/Tableau'
+import { createDeck } from './deck'
 
 type SevenTableau = [Tableau, Tableau, Tableau, Tableau, Tableau, Tableau, Tableau]
 type FourFoundation = [Foundation, Foundation, Foundation, Foundation]
@@ -68,7 +68,7 @@ export const initDevGame = (): GameState => {
       new Tableau([new Card(9, 'hearts', false), new Card(12, 'diamonds', true)]),
       new Tableau([new Card(13, 'spades', true)]),
       new Tableau([
-        new Card(3, 'hearts', false),
+        new Card(2, 'clubs', false),
         new Card(2, 'hearts', false),
         new Card(1, 'hearts', true),
       ]),

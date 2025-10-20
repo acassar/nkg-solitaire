@@ -3,13 +3,12 @@ import type { GameState } from '@/utils/initGame'
 export interface GameStats {
   score: number
   moves: number
-  timeElapsed: number
   foundationCards: number
   completedFoundations: number
 }
 
 export class Score {
-  private startTime: number
+  public startTime: number
   private moves: number = 0
   private score: number = 0
 
@@ -26,16 +25,19 @@ export class Score {
   }
 
   getStats(gameState: GameState): GameStats {
-    const timeElapsed = Date.now() - this.startTime
-    const foundationCards = gameState.foundations.reduce((sum, foundation) => sum + foundation.cards.length, 0)
-    const completedFoundations = gameState.foundations.filter(foundation => foundation.cards.length === 13).length
+    const foundationCards = gameState.foundations.reduce(
+      (sum, foundation) => sum + foundation.cards.length,
+      0,
+    )
+    const completedFoundations = gameState.foundations.filter(
+      (foundation) => foundation.cards.length === 13,
+    ).length
 
     return {
       score: this.score,
       moves: this.moves,
-      timeElapsed,
       foundationCards,
-      completedFoundations
+      completedFoundations,
     }
   }
 
@@ -47,13 +49,7 @@ export class Score {
 
   // Scoring rules
   static readonly SCORES = {
-    FOUNDATION_CARD: 10,
-    TABLEAU_TO_FOUNDATION: 10,
-    WASTE_TO_FOUNDATION: 10,
-    WASTE_TO_TABLEAU: 5,
-    TABLEAU_TO_TABLEAU: 5,
-    REVEAL_TABLEAU_CARD: 5,
-    WASTE_TO_WASTE: -2, // Penalty for cycling through waste pile
+    TABLEAU_TO_FOUNDATION: 100,
+    WASTE_CYCLE: -15,
   }
 }
-

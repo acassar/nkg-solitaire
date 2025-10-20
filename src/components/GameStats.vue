@@ -1,18 +1,31 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useGameStateStore } from '@/stores/gameStateStore'
+import { storeToRefs } from 'pinia'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 const gameStore = useGameStateStore()
-const { gameState } = storeToRefs(gameStore)
+const { gameStats, scoreService } = storeToRefs(gameStore)
 
-const stats = computed(() => gameStore.getStats())
+const now = ref(Date.now())
+let interval: ReturnType<typeof setInterval> | null = null
+
+const timeElapsed = computed(() => Math.max(now.value - scoreService.value.startTime, 0))
+
+onMounted(() => {
+  interval = setInterval(() => {
+    now.value = Date.now()
+  }, 1000)
+})
+
+onUnmounted(() => {
+  if (interval) clearInterval(interval)
+})
 
 const formatTime = (milliseconds: number): string => {
   const seconds = Math.floor(milliseconds / 1000)
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
-  
+
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 </script>
@@ -21,22 +34,22 @@ const formatTime = (milliseconds: number): string => {
   <div class="game-stats">
     <div class="stat-item">
       <span class="stat-label">Score:</span>
-      <span class="stat-value">{{ stats.score }}</span>
+      <span class="stat-value">{{ gameStats.score }}</span>
     </div>
-    
+
     <div class="stat-item">
       <span class="stat-label">Mouvements:</span>
-      <span class="stat-value">{{ stats.moves }}</span>
+      <span class="stat-value">{{ gameStats.moves }}</span>
     </div>
-    
+
     <div class="stat-item">
       <span class="stat-label">Temps:</span>
-      <span class="stat-value">{{ formatTime(stats.timeElapsed) }}</span>
+      <span class="stat-value">{{ formatTime(timeElapsed) }}</span>
     </div>
-    
+
     <div class="stat-item">
       <span class="stat-label">Fondations:</span>
-      <span class="stat-value">{{ stats.completedFoundations }}/4</span>
+      <span class="stat-value">{{ gameStats.completedFoundations }}/4</span>
     </div>
   </div>
 </template>
@@ -81,10 +94,9 @@ const formatTime = (milliseconds: number): string => {
     gap: 1rem;
     padding: 0.5rem 1rem;
   }
-  
+
   .stat-value {
     font-size: 1rem;
   }
 }
 </style>
-

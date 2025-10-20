@@ -1,10 +1,10 @@
 import type { Card } from '@/models/Card'
+import { DiscardPile } from '@/models/DiscardPile'
+import { Foundation } from '@/models/Foundation'
 import type { Pile } from '@/models/Pile'
 import { Tableau } from '@/models/Tableau'
-import { Foundation } from '@/models/Foundation'
-import { DiscardPile } from '@/models/DiscardPile'
-import { moveStackedCardsFromTableauToTableau } from './tableauService'
 import { moveStackedCardsFromTableauToFoundation } from './foundationService'
+import { moveStackedCardsFromTableauToTableau } from './tableauService'
 
 // Type helpers
 
@@ -69,7 +69,11 @@ const getMoveKey = (from: Pile, target: Pile): MoveKey => {
 /**
  * Process a move using direct lookup
  */
-export const processMoveHandlers = (from: Pile, target: Pile, cards: Card[]): boolean => {
+export const processMoveHandlers = (
+  from: Pile,
+  target: Pile,
+  cards: Card[],
+): boolean | undefined => {
   const moveKey = getMoveKey(from, target)
   const strategy = moveRegistry.get(moveKey)
 
@@ -82,13 +86,13 @@ export const processMoveHandlers = (from: Pile, target: Pile, cards: Card[]): bo
     console.warn(
       `Invalid move: cannot move ${cards[0].suit} ${cards[0].value} to ${target.constructor.name}`,
     )
-    return true // Handled but invalid
+    return undefined
   }
 
   // Validate card count
   if (!strategy.allowMultipleCards && cards.length > 1) {
     console.warn(`Cannot move multiple cards to ${target.constructor.name}`)
-    return true // Handled but invalid
+    return undefined
   }
 
   // Execute move

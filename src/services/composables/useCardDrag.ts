@@ -1,13 +1,15 @@
 import type { Card } from '@/models/Card'
-import { ref } from 'vue'
 import type { Dragging } from '@/models/Drag'
 import type { Pile } from '@/models/Pile'
+import { useGameStateStore } from '@/stores/gameStateStore'
+import { ref } from 'vue'
 import { processMoveHandlers } from '../moveHandlers'
 import { useDragAndDrop } from './dragAndDrop/useDragAndDrop'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
   const { startDrag } = useDragAndDrop({ dragEndCallback: () => stopCardDrag() })
+  const { scoreService } = useGameStateStore()
 
   const startCardDrag = (card: Card, from: Pile, event: PointerEvent) => {
     console.info('Drag started:', card, 'from:', from)
@@ -48,8 +50,13 @@ export const useCardDrag = () => {
       const { from, cards } = dragging.value
 
       // Process the move using all available handlers
-      if (!processMoveHandlers(from, target, cards)) {
+      const result = processMoveHandlers(from, target, cards)
+      if (result === false) {
         console.warn('Unsupported move type:', from.constructor.name, 'to', target.constructor.name)
+      } else if (result === undefined) {
+        console.warn('Invalid move:', from.constructor.name, 'to', target.constructor.name)
+      } else {
+        scoreService.incrementMoves()
       }
     } finally {
       dragging.value = undefined
