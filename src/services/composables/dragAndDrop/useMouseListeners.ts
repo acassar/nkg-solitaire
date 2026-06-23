@@ -13,7 +13,6 @@ const onPointerMove = (e: PointerEvent) => {
 
 const onPointerUp = (e: PointerEvent) => {
   e.preventDefault()
-  console.log('listeners', listeners)
   listeners.pointerUp.forEach((callback) => callback(e))
 }
 

@@ -85,6 +85,35 @@ export const initDevGame = (): GameState => {
       drawPile: new DrawPile([new Card(13, 'clubs', false), new Card(12, 'clubs', false)]),
       discardPile: new DiscardPile(),
     },
-    deck: createDeck(),
+    deck: [],
+  }
+}
+
+const makeFullFoundation = (suit: 'hearts' | 'diamonds' | 'clubs' | 'spades', count: number) =>
+  new Foundation(Array.from({ length: count }, (_, i) => new Card(i + 1, suit, true)))
+
+// Seed with 1 move remaining: K♥ on tableau, hearts foundation has A-Q, rest complete
+export const initAlmostDoneGame = (): GameState => {
+  return {
+    tableau: [
+      new Tableau([new Card(13, 'hearts', true)]),
+      new Tableau([]),
+      new Tableau([]),
+      new Tableau([]),
+      new Tableau([]),
+      new Tableau([]),
+      new Tableau([]),
+    ] as SevenTableau,
+    foundations: [
+      makeFullFoundation('hearts', 12),
+      makeFullFoundation('diamonds', 13),
+      makeFullFoundation('clubs', 13),
+      makeFullFoundation('spades', 13),
+    ] as FourFoundation,
+    stock: {
+      drawPile: new DrawPile([]),
+      discardPile: new DiscardPile(),
+    },
+    deck: [],
   }
 }

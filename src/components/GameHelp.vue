@@ -37,17 +37,15 @@ const toggleHelp = () => {
           <h3>🎮 Contrôles</h3>
           <ul>
             <li><strong>Glisser-Déposer :</strong> Faites glisser les cartes pour les déplacer</li>
-            <li><strong>Double-clic :</strong> Place automatiquement une carte sur une fondation valide</li>
             <li><strong>Nouvelle Partie :</strong> Bouton en haut à droite</li>
           </ul>
         </div>
-        
+
         <div class="help-section">
           <h3>🏆 Score</h3>
           <ul>
-            <li>+10 points : Carte placée sur une fondation</li>
-            <li>+5 points : Carte révélée dans le tableau</li>
-            <li>-2 points : Cycle dans la pile de défausse</li>
+            <li>+100 points : Carte placée sur une fondation</li>
+            <li>-15 points : Recyclage de la pile de défausse</li>
           </ul>
         </div>
         

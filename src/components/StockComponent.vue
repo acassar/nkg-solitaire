@@ -24,7 +24,10 @@ const stock = defineModel<{ drawPile: DrawPile; discardPile: DiscardPile }>({ re
 const { startCardDrag, dragging } = useDrag
 
 const drawCard = () => {
-  if (stock.value.drawPile.cards.length === 0) handleLastCardDrawn()
+  if (stock.value.drawPile.cards.length === 0) {
+    if (stock.value.discardPile.cards.length === 0) return
+    handleLastCardDrawn()
+  }
 
   const card = stock.value.drawPile.cards.pop()
   if (card) {

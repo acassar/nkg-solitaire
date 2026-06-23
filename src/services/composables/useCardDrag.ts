@@ -12,8 +12,6 @@ export const useCardDrag = () => {
   const { scoreService } = useGameStateStore()
 
   const startCardDrag = (card: Card, from: Pile, event: PointerEvent) => {
-    console.info('Drag started:', card, 'from:', from)
-
     const stackedCards = from.getStackedCards(card.id)
 
     dragging.value = {
@@ -30,37 +28,28 @@ export const useCardDrag = () => {
     })
 
     startDrag(event, cardElementsToDrag)
-    if (!card) return
   }
 
   const stopCardDrag = () => {
-    console.info('Drag ended')
     dragging.value = undefined
   }
 
-  // Main drop handler
-  const handleCardMove = (target: Pile) => {
-    console.info('Drop event:', target)
+  // Main drop handler — returns true if the move was successfully executed
+  const handleCardMove = (target: Pile): boolean => {
+    let success = false
     try {
-      if (!dragging.value) {
-        console.warn('No card is being dragged')
-        return
-      }
+      if (!dragging.value) return false
 
       const { from, cards } = dragging.value
-
-      // Process the move using all available handlers
       const result = processMoveHandlers(from, target, cards)
-      if (result === false) {
-        console.warn('Unsupported move type:', from.constructor.name, 'to', target.constructor.name)
-      } else if (result === undefined) {
-        console.warn('Invalid move:', from.constructor.name, 'to', target.constructor.name)
-      } else {
+      if (result === true) {
         scoreService.incrementMoves()
+        success = true
       }
     } finally {
       dragging.value = undefined
     }
+    return success
   }
 
   return {

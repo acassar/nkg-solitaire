@@ -6,7 +6,7 @@ import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDro
 import { type TUseDrag } from '@/services/composables/useCardDrag'
 import { useGameStateStore } from '@/stores/gameStateStore'
 import { storeToRefs } from 'pinia'
-import { inject, onMounted, ref } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import Card from './card/CardComponent.vue'
 
 const useDrag = inject<TUseDrag>(useDragKey)
@@ -26,7 +26,7 @@ const props = defineProps<{
 const foundationRef = ref<HTMLElement | null>(null)
 
 const { handleCardMove, startCardDrag, dragging } = useDrag
-const { registerDropZone } = useDragAndDrop()
+const { registerDropZone, unregisterDropZone } = useDragAndDrop()
 
 const onHover = () => {
   if (!foundationRef.value) throw Error('Ref non montée')
@@ -40,9 +40,10 @@ const onStopHovering = () => {
 }
 
 const onDrop = () => {
-  handleCardMove(props.foundation)
-  //TODO: handle multiple passes
-  scoreService.value.addScore(Score.SCORES.TABLEAU_TO_FOUNDATION)
+  const moved = handleCardMove(props.foundation)
+  if (moved) {
+    scoreService.value.addScore(Score.SCORES.TABLEAU_TO_FOUNDATION)
+  }
 }
 
 onMounted(() => {
@@ -54,6 +55,10 @@ onMounted(() => {
     onDrop: onDrop,
     onStopHovering: onStopHovering,
   })
+})
+
+onBeforeUnmount(() => {
+  unregisterDropZone(props.foundation.id)
 })
 </script>
 

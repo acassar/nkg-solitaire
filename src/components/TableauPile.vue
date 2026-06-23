@@ -4,7 +4,7 @@ import type { Card as CardModel } from '@/models/Card'
 import type { Tableau } from '@/models/Tableau'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import Card from './card/CardComponent.vue'
 
 const useDrag = inject<TUseDrag>(useDragKey)
@@ -21,7 +21,7 @@ const props = defineProps<{
 const tableauRef = ref<HTMLDivElement>()
 
 const { startCardDrag, dragging, handleCardMove } = useDrag
-const { registerDropZone } = useDragAndDrop()
+const { registerDropZone, unregisterDropZone } = useDragAndDrop()
 
 const handleDrop = () => {
   handleCardMove(props.tableau)
@@ -56,6 +56,10 @@ onMounted(() => {
     onDrop: () => handleCardMove(props.tableau),
     onStopHovering: onStopHovering,
   })
+})
+
+onBeforeUnmount(() => {
+  unregisterDropZone(props.tableau.id)
 })
 
 const onHover = () => {
