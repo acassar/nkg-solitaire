@@ -23,10 +23,20 @@ const props = defineProps<{
   isDropZone?: boolean
 }>()
 
+let lastPointerDownTime = 0
+
 function onPointerDown(e: PointerEvent) {
-  if (elementRef.value && props.canBeDragged) {
-    emit('dragStart', e)
+  if (!elementRef.value || !props.canBeDragged) return
+
+  const now = Date.now()
+  if (now - lastPointerDownTime < 300) {
+    lastPointerDownTime = 0
+    emit('dblClick')
+    return
   }
+
+  lastPointerDownTime = now
+  emit('dragStart', e)
 }
 
 function onHover() {
@@ -78,7 +88,6 @@ watch(
     ]"
     :style="{ zIndex: beingDragged ? 1000 : zIndex }"
     @click="canBeClicked ? $emit('click') : null"
-    @dblclick="canBeDragged ? $emit('dblClick') : null"
     @pointerdown="onPointerDown"
   >
     <template v-if="card.faceUp">
