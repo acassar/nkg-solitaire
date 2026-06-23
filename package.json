@@ -15,15 +15,9 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "mobile:sync": "npm run build && npx cap sync",
-    "mobile:android": "npm run build && npx cap sync android && npx cap open android",
-    "mobile:ios": "npm run build && npx cap sync ios && npx cap open ios"
+    "pwa:build": "npm run build"
   },
   "dependencies": {
-    "@capacitor/android": "^8.4.1",
-    "@capacitor/cli": "^8.4.1",
-    "@capacitor/core": "^8.4.1",
-    "@capacitor/ios": "^8.4.1",
     "@vueuse/core": "^13.6.0",
     "pinia": "^3.0.3",
     "uuid": "^11.1.0",
@@ -47,6 +41,7 @@
     "prettier": "3.6.2",
     "typescript": "~5.8.0",
     "vite": "^7.0.6",
+    "vite-plugin-pwa": "^1.3.0",
     "vite-plugin-vue-devtools": "^8.0.0",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.4"
