@@ -53,7 +53,7 @@ const startNewGame = () => {
 </template>
 
 <style scoped>
-.game-board {
+#game-board {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -66,8 +66,7 @@ const startNewGame = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1rem;
-  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
 }
 
 .header-controls {
@@ -110,6 +109,7 @@ const startNewGame = () => {
 .top-row {
   display: flex;
   justify-content: space-around;
+  align-items: flex-start;
   height: calc((var(--card-height) - var(--card-overlap)) * 14);
 }
 
@@ -130,5 +130,51 @@ const startNewGame = () => {
   align-items: center;
   justify-content: space-around;
   flex: 1;
+}
+
+@media (max-width: 640px) {
+  #game-board {
+    padding: 0.5rem;
+    gap: 0.25rem;
+  }
+
+  .game-header {
+    padding: 0.25rem 0.25rem;
+    margin-bottom: 0;
+  }
+
+  .game-title {
+    display: none;
+  }
+
+  .header-controls {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .new-game-btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .top-row {
+    height: auto;
+    justify-content: space-between;
+    padding: 0 0.1rem;
+  }
+
+  .foundations {
+    gap: 0.25rem;
+  }
+
+  .tableau {
+    gap: 0.25rem;
+  }
+
+  .center-area {
+    justify-content: flex-start;
+    align-items: stretch;
+  }
 }
 </style>

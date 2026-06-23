@@ -3,3 +3,13 @@
   --card-height: 90px;
   --card-overlap: 70px;
 }
+
+/* Mobile: scale cards to fill viewport width across 7 tableau columns.
+   Overhead = 1rem board-padding + 7×0.5rem pile-padding + 6×0.25rem gaps = 6rem */
+@media (max-width: 640px) {
+  :root {
+    --card-width: calc((100vw - 6rem) / 7);
+    --card-height: calc(var(--card-width) * 1.5);
+    --card-overlap: var(--card-width);
+  }
+}

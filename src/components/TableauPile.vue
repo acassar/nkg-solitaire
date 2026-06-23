@@ -3,7 +3,7 @@ import { useDragKey } from '@/constants/provideKeys'
 import type { Tableau } from '@/models/Tableau'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
-import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import Card from './card/CardComponent.vue'
 import type { Card as CardModel } from '@/models/Card'
 
@@ -31,21 +31,6 @@ const handleDragStart = (selectedCard: CardModel, tableau: Tableau, event: Point
   startCardDrag(selectedCard, tableau, event)
 }
 
-// Calculate the height based on the number of cards
-const pileHeight = computed(() => {
-  // Get CSS variables from the document root
-  const rootStyles = getComputedStyle(document.documentElement)
-  const cardHeight = parseInt(rootStyles.getPropertyValue('--card-height'))
-  const cardOverlap = parseInt(rootStyles.getPropertyValue('--card-overlap'))
-  const numCards = props.tableau.cards.length
-
-  if (numCards === 0) {
-    return cardHeight
-  }
-
-  // Height = first card height + (number of additional cards * (card height - overlap))
-  return cardHeight + (numCards - 1) * (cardHeight - cardOverlap)
-})
 
 onMounted(() => {
   if (!tableauRef.value) throw Error('Ref non montée')
@@ -75,7 +60,7 @@ const onStopHovering = () => {
 </script>
 
 <template>
-  <div ref="tableauRef" class="pile" :style="{ height: pileHeight + 'px' }">
+  <div ref="tableauRef" class="pile">
     <div v-if="tableau.cards.length === 0" class="card empty" @dragover.prevent></div>
     <div
       v-else
@@ -122,6 +107,21 @@ const onStopHovering = () => {
   align-items: center;
   width: calc(var(--card-width) * 1.1);
   height: var(--card-height);
-  margin-bottom: calc(-1 * var(--card-overlap)); /* Overlap cards */
+  margin-bottom: calc(-1 * var(--card-overlap));
+}
+
+/* Last card must not have a negative margin so the pile expands to contain it */
+.card-container:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .pile {
+    padding: 0.25rem;
+  }
+
+  .card-container {
+    width: var(--card-width);
+  }
 }
 </style>

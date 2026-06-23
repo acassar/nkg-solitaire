@@ -23,14 +23,14 @@ const suitStyles: Record<Suit, { icon: string; color: string }> = {
 
 <style scoped>
 .value {
-  font-size: 16px;
+  font-size: clamp(9px, calc(var(--card-width) * 0.27), 16px);
   font-weight: bold;
   font-family:
     'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .icon {
-  font-size: 22px;
+  font-size: clamp(11px, calc(var(--card-width) * 0.37), 22px);
   font-weight: bold;
 }
 </style>
