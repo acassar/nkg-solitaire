@@ -27,14 +27,15 @@ const drawCard = () => {
   if (stock.value.drawPile.cards.length === 0) {
     if (stock.value.discardPile.cards.length === 0) return
     handleLastCardDrawn()
+    return
   }
 
-  const card = stock.value.drawPile.cards.pop()
-  if (card) {
+  for (let i = 0; i < 3 && stock.value.drawPile.cards.length > 0; i++) {
+    const card = stock.value.drawPile.cards.pop()!
     card.faceUp = true
     stock.value.discardPile.cards.push(card)
-    scoreService.value.incrementMoves()
   }
+  scoreService.value.incrementMoves()
 }
 
 const handleLastCardDrawn = () => {
