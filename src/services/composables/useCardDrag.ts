@@ -9,7 +9,7 @@ import { useDragAndDrop } from './dragAndDrop/useDragAndDrop'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
-  const { startDrag } = useDragAndDrop({ dragEndCallback: () => stopCardDrag() })
+  const { startDrag, cancelDrag } = useDragAndDrop({ dragEndCallback: () => stopCardDrag() })
   const store = useGameStateStore()
   const { scoreService } = store
 
@@ -51,6 +51,7 @@ export const useCardDrag = () => {
 
     if (now - last < 300) {
       lastDragStartTime.delete(card.id)
+      cancelDrag()
       autoMoveToFoundation(card, from)
       return
     }

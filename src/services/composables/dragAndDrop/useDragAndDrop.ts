@@ -216,6 +216,37 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
     options.dragEndCallback?.()
   }
 
+  /** Cancels any in-progress or pending drag, restoring element state. */
+  function cancelDrag() {
+    if (!dragState.pendingDrag && !dragState.dragging) return
+
+    if (dragState.dragging) {
+      dragState.lastZoneHovered?.onStopHovering?.()
+      dragState.lastZoneHovered = null
+      try {
+        dragState.elements.forEach((el) => el.releasePointerCapture(dragState.pointerId!))
+      } catch {}
+      dragState.elements.forEach((el) => {
+        el.style.position = ''
+        el.style.left = ''
+        el.style.top = ''
+        el.style.zIndex = ''
+        el.style.transform = ''
+        const originalParent = (el as HTMLElement & { __originalParent?: Node | null })
+          .__originalParent
+        const originalNextSibling = (el as HTMLElement & { __originalNextSibling?: Node | null })
+          .__originalNextSibling
+        if (originalParent) originalParent.insertBefore(el, originalNextSibling ?? null)
+      })
+    }
+
+    dragState.dragging = false
+    dragState.pendingDrag = false
+    dragState.pointerId = null
+    dragState.elements = []
+    options.dragEndCallback?.()
+  }
+
   onMounted(() => {
     registerPointerMoveListener(onPointerMove)
     registerPointerUpListener(onPointerUp)
@@ -228,6 +259,7 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
 
   return {
     startDrag,
+    cancelDrag,
     registerDropZone,
     unregisterDropZone,
   }
