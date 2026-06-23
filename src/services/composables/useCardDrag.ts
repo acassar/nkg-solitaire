@@ -13,7 +13,50 @@ export const useCardDrag = () => {
   const store = useGameStateStore()
   const { scoreService } = store
 
+  const stopCardDrag = () => {
+    dragging.value = undefined
+  }
+
+  const autoMoveToFoundation = (card: Card, from: Pile): boolean => {
+    // Prefer foundation
+    const foundationTarget = store.gameState.foundations.find((f) => f.isValidMove(card))
+    if (foundationTarget) {
+      const result = processMoveHandlers(from, foundationTarget, [card])
+      if (result === true) {
+        scoreService.incrementMoves()
+        scoreService.addScore(Score.SCORES.TABLEAU_TO_FOUNDATION)
+        return true
+      }
+    }
+
+    // Fall back to any valid tableau pile (move entire stack)
+    const stackedCards = from.getStackedCards(card.id)
+    const tableauTarget = store.gameState.tableau.find((t) => t !== from && t.isValidMove(card))
+    if (tableauTarget) {
+      const result = processMoveHandlers(from, tableauTarget, stackedCards)
+      if (result === true) {
+        scoreService.incrementMoves()
+        return true
+      }
+    }
+
+    return false
+  }
+
+  const lastDragStartTime = new Map<string, number>()
+
   const startCardDrag = (card: Card, from: Pile, event: PointerEvent) => {
+    const now = Date.now()
+    const last = lastDragStartTime.get(card.id) ?? 0
+
+    if (now - last < 300) {
+      lastDragStartTime.delete(card.id)
+      autoMoveToFoundation(card, from)
+      return
+    }
+
+    lastDragStartTime.set(card.id, now)
+
     const stackedCards = from.getStackedCards(card.id)
 
     dragging.value = {
@@ -32,10 +75,6 @@ export const useCardDrag = () => {
     startDrag(event, cardElementsToDrag)
   }
 
-  const stopCardDrag = () => {
-    dragging.value = undefined
-  }
-
   // Main drop handler — returns true if the move was successfully executed
   const handleCardMove = (target: Pile): boolean => {
     let success = false
@@ -52,19 +91,6 @@ export const useCardDrag = () => {
       dragging.value = undefined
     }
     return success
-  }
-
-  const autoMoveToFoundation = (card: Card, from: Pile): boolean => {
-    const target = store.gameState.foundations.find((f) => f.isValidMove(card))
-    if (!target) return false
-
-    const result = processMoveHandlers(from, target, [card])
-    if (result === true) {
-      scoreService.incrementMoves()
-      scoreService.addScore(Score.SCORES.TABLEAU_TO_FOUNDATION)
-      return true
-    }
-    return false
   }
 
   return {

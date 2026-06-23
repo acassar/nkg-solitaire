@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useDragKey } from '@/constants/provideKeys'
-import type { Card as CardModel } from '@/models/Card'
 import type { Tableau } from '@/models/Tableau'
 import { useDragAndDrop } from '@/services/composables/dragAndDrop/useDragAndDrop'
 import { type TUseDrag } from '@/services/composables/useCardDrag'
 import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import Card from './card/CardComponent.vue'
+import type { Card as CardModel } from '@/models/Card'
 
 const useDrag = inject<TUseDrag>(useDragKey)
 if (!useDrag) {
@@ -77,7 +77,12 @@ const onStopHovering = () => {
 <template>
   <div ref="tableauRef" class="pile" :style="{ height: pileHeight + 'px' }">
     <div v-if="tableau.cards.length === 0" class="card empty" @dragover.prevent></div>
-    <div v-else class="card-container" v-for="(card, index) in tableau.cards" :key="card.id">
+    <div
+      v-else
+      class="card-container"
+      v-for="(card, index) in tableau.cards"
+      :key="card.id"
+    >
       <Card
         :card
         :being-dragged="dragging?.cards.includes(card)"
@@ -87,7 +92,7 @@ const onStopHovering = () => {
         :z-index="index + 1"
         @drag-start="(e) => handleDragStart(card, tableau, e)"
         @drop="handleDrop()"
-        @dbl-click="() => autoMoveToFoundation(card, tableau)"
+        @dbl-click="autoMoveToFoundation(card, tableau)"
       />
     </div>
   </div>

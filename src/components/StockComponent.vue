@@ -63,14 +63,13 @@ const handleLastCardDrawn = () => {
           :key="card.id"
           class="card-container"
         >
-          <!-- TODO: handle can be clicked -->
           <Card
             :card="card"
             :can-be-clicked="stock.discardPile.cards.at(-1) === card"
             :being-dragged="dragging?.cards.includes(card) ?? false"
             :can-be-dragged="stock.discardPile.cards.at(-1) === card"
             @drag-start="(e) => startCardDrag(card, stock.discardPile, e)"
-            @dbl-click="() => autoMoveToFoundation(card, stock.discardPile)"
+            @dbl-click="stock.discardPile.cards.at(-1) === card && autoMoveToFoundation(card, stock.discardPile)"
           />
         </div>
       </template>

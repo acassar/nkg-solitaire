@@ -12,12 +12,10 @@ const onPointerMove = (e: PointerEvent) => {
 }
 
 const onPointerUp = (e: PointerEvent) => {
-  e.preventDefault()
   listeners.pointerUp.forEach((callback) => callback(e))
 }
 
 const onPointerDown = (e: PointerEvent) => {
-  e.preventDefault()
   listeners.pointerDown.forEach((callback) => callback(e))
 }
 
