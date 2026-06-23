@@ -23,7 +23,12 @@ const stock = defineModel<{ drawPile: DrawPile; discardPile: DiscardPile }>({ re
 
 const { startCardDrag, dragging, autoMoveToFoundation } = useDrag
 
+let lastDrawTime = 0
 const drawCard = () => {
+  const now = Date.now()
+  if (now - lastDrawTime < 400) return
+  lastDrawTime = now
+
   if (stock.value.drawPile.cards.length === 0) {
     if (stock.value.discardPile.cards.length === 0) return
     handleLastCardDrawn()
