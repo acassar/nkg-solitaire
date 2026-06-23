@@ -20,7 +20,7 @@ const props = defineProps<{
 
 const tableauRef = ref<HTMLDivElement>()
 
-const { startCardDrag, dragging, handleCardMove } = useDrag
+const { startCardDrag, dragging, handleCardMove, autoMoveToFoundation } = useDrag
 const { registerDropZone, unregisterDropZone } = useDragAndDrop()
 
 const handleDrop = () => {
@@ -87,6 +87,7 @@ const onStopHovering = () => {
         :z-index="index + 1"
         @drag-start="(e) => handleDragStart(card, tableau, e)"
         @drop="handleDrop()"
+        @dbl-click="() => autoMoveToFoundation(card, tableau)"
       />
     </div>
   </div>
