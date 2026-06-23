@@ -1,10 +1,10 @@
 import { Score } from '@/models/Score'
-import { initAlmostDoneGame, initGame, type GameState } from '@/utils/initGame'
+import { initGame, type GameState } from '@/utils/initGame'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 export const useGameStateStore = defineStore('gameState', () => {
-  const gameState = ref<GameState>(initAlmostDoneGame())
+  const gameState = ref<GameState>(initGame())
   const scoreService = ref<Score>(new Score())
 
   const startNewGame = () => {
