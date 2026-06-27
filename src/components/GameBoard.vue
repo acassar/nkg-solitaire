@@ -37,9 +37,11 @@ const anyStatVisible = computed(
       <h1 class="game-title">Solitaire</h1>
       <div class="header-controls">
         <GameStats v-if="anyStatVisible" />
-        <GameOptions />
-        <GameHelp />
-        <button @click="startNewGame" class="new-game-btn">Nouvelle Partie</button>
+        <div class="header-buttons">
+          <GameOptions />
+          <GameHelp />
+          <button @click="startNewGame" class="new-game-btn">Nouvelle Partie</button>
+        </div>
       </div>
     </div>
 
@@ -78,6 +80,12 @@ const anyStatVisible = computed(
 }
 
 .header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-buttons {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -157,11 +165,19 @@ const anyStatVisible = computed(
 
   .header-controls {
     width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+
+  .header-buttons {
+    display: flex;
     justify-content: space-between;
     gap: 0.5rem;
   }
 
   .new-game-btn {
+    flex: 1;
     padding: 0.4rem 0.6rem;
     font-size: 0.8rem;
   }

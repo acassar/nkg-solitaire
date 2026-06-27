@@ -88,21 +88,17 @@ const formatTime = (milliseconds: number): string => {
 
 @media (max-width: 640px) {
   .game-stats {
-    gap: 0.6rem;
-    padding: 0.35rem 0.6rem;
+    justify-content: space-around;
+    padding: 0.3rem 0.5rem;
+    gap: 0;
   }
 
   .stat-label {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
   }
 
   .stat-value {
-    font-size: 0.9rem;
-  }
-
-  /* Fondations already visible in the game, save space */
-  .stat-item:last-child {
-    display: none;
+    font-size: 0.85rem;
   }
 }
 </style>
