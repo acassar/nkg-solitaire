@@ -2,11 +2,13 @@
 import { useDragKey } from '@/constants/provideKeys'
 import { useCardDrag } from '@/services/composables/useCardDrag'
 import { useGameStateStore } from '@/stores/gameStateStore'
+import { useSettingsStore } from '@/stores/settingsStore'
 import { storeToRefs } from 'pinia'
-import { provide } from 'vue'
+import { computed, provide } from 'vue'
 import FoundationPile from './FoundationPile.vue'
 import GameCompletion from './GameCompletion.vue'
 import GameHelp from './GameHelp.vue'
+import GameOptions from './GameOptions.vue'
 import GameStats from './GameStats.vue'
 import Stock from './StockComponent.vue'
 import TableauPile from './TableauPile.vue'
@@ -14,12 +16,17 @@ import TableauPile from './TableauPile.vue'
 const gameStore = useGameStateStore()
 const { gameState } = storeToRefs(gameStore)
 const useDrag = useCardDrag()
+const settings = useSettingsStore()
 
 provide(useDragKey, useDrag)
 
 const startNewGame = () => {
   gameStore.startNewGame()
 }
+
+const anyStatVisible = computed(
+  () => settings.showScore || settings.showTime || settings.showMoves,
+)
 </script>
 
 <template>
@@ -29,7 +36,8 @@ const startNewGame = () => {
     <div class="game-header">
       <h1 class="game-title">Solitaire</h1>
       <div class="header-controls">
-        <GameStats />
+        <GameStats v-if="anyStatVisible" />
+        <GameOptions />
         <GameHelp />
         <button @click="startNewGame" class="new-game-btn">Nouvelle Partie</button>
       </div>

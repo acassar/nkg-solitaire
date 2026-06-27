@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useGameStateStore } from '@/stores/gameStateStore'
+import { useSettingsStore } from '@/stores/settingsStore'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 const gameStore = useGameStateStore()
 const { gameStats, scoreService } = storeToRefs(gameStore)
+const settings = useSettingsStore()
 
 const now = ref(Date.now())
 let interval: ReturnType<typeof setInterval> | null = null
@@ -32,24 +34,19 @@ const formatTime = (milliseconds: number): string => {
 
 <template>
   <div class="game-stats">
-    <div class="stat-item">
-      <span class="stat-label">Score:</span>
+    <div v-if="settings.showScore" class="stat-item">
+      <span class="stat-label">Score</span>
       <span class="stat-value">{{ gameStats.score }}</span>
     </div>
 
-    <div class="stat-item">
-      <span class="stat-label">Mouvements:</span>
+    <div v-if="settings.showMoves" class="stat-item">
+      <span class="stat-label">Mouvements</span>
       <span class="stat-value">{{ gameStats.moves }}</span>
     </div>
 
-    <div class="stat-item">
-      <span class="stat-label">Temps:</span>
+    <div v-if="settings.showTime" class="stat-item">
+      <span class="stat-label">Temps</span>
       <span class="stat-value">{{ formatTime(timeElapsed) }}</span>
-    </div>
-
-    <div class="stat-item">
-      <span class="stat-label">Fondations:</span>
-      <span class="stat-value">{{ gameStats.completedFoundations }}/4</span>
     </div>
   </div>
 </template>
