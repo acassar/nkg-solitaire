@@ -17,6 +17,7 @@ type DragState = {
 
 interface UseDragAndDropOptions {
   dragEndCallback?: () => void
+  clickCallback?: () => void
   allowFreeDrag?: Ref<boolean>
   allowDropOnZone?: Ref<boolean>
 }
@@ -55,8 +56,8 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
    * Records a pending drag. The drag only activates once the pointer moves
    * more than 5px, so a double-click (no movement) never starts a drag.
    */
-  function startDrag(e: PointerEvent, el: HTMLElement | HTMLElement[]) {
-    if (dragState.dragging || dragState.pendingDrag) return
+  function startDrag(e: PointerEvent, el: HTMLElement | HTMLElement[]): boolean {
+    if (dragState.dragging || dragState.pendingDrag) return false
 
     dragState.pendingDrag = true
     dragState.elements = Array.isArray(el) ? el : [el]
@@ -74,6 +75,7 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
       dragState.elementOriginalX = 0
       dragState.elementOriginalY = 0
     }
+    return true
   }
 
   /** Transitions from pending to active drag once the movement threshold is exceeded. */
@@ -164,6 +166,7 @@ export function useDragAndDrop(options: UseDragAndDropOptions = {}) {
       dragState.pendingDrag = false
       dragState.pointerId = null
       dragState.elements = []
+      options.clickCallback?.()
       options.dragEndCallback?.()
       return
     }

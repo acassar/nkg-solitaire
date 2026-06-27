@@ -21,7 +21,7 @@ const { scoreService } = storeToRefs(gameStore)
 
 const stock = defineModel<{ drawPile: DrawPile; discardPile: DiscardPile }>({ required: true })
 
-const { startCardDrag, dragging, autoMoveToFoundation } = useDrag
+const { startCardDrag, dragging } = useDrag
 
 let lastDrawTime = 0
 const drawCard = () => {
@@ -75,7 +75,6 @@ const handleLastCardDrawn = () => {
             :being-dragged="dragging?.cards.includes(card) ?? false"
             :can-be-dragged="stock.discardPile.cards.at(-1) === card"
             @drag-start="(e) => startCardDrag(card, stock.discardPile, e)"
-            @dbl-click="stock.discardPile.cards.at(-1) === card && autoMoveToFoundation(card, stock.discardPile)"
           />
         </div>
       </template>

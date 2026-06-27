@@ -9,7 +9,14 @@ import { useDragAndDrop } from './dragAndDrop/useDragAndDrop'
 
 export const useCardDrag = () => {
   const dragging = ref<Dragging>()
-  const { startDrag, cancelDrag } = useDragAndDrop({ dragEndCallback: () => stopCardDrag() })
+  const { startDrag } = useDragAndDrop({
+    dragEndCallback: () => stopCardDrag(),
+    clickCallback: () => {
+      if (dragging.value) {
+        autoMoveToFoundation(dragging.value.cards[0], dragging.value.from)
+      }
+    },
+  })
   const store = useGameStateStore()
   const { scoreService } = store
 
@@ -43,37 +50,16 @@ export const useCardDrag = () => {
     return false
   }
 
-  const lastDragStartTime = new Map<string, number>()
-
   const startCardDrag = (card: Card, from: Pile, event: PointerEvent) => {
-    const now = Date.now()
-    const last = lastDragStartTime.get(card.id) ?? 0
-
-    if (now - last < 300) {
-      lastDragStartTime.delete(card.id)
-      cancelDrag()
-      autoMoveToFoundation(card, from)
-      return
-    }
-
-    lastDragStartTime.set(card.id, now)
-
     const stackedCards = from.getStackedCards(card.id)
 
-    dragging.value = {
-      cards: stackedCards,
-      from: from,
-    }
+    const cardElementsToDrag = stackedCards
+      .map((c) => document.getElementById(c.id))
+      .filter((el): el is HTMLElement => !!el)
 
-    const cardElementsToDrag: HTMLElement[] = []
-    stackedCards.forEach((card) => {
-      const cardElement = document.getElementById(card.id)
-      if (cardElement) {
-        cardElementsToDrag.push(cardElement)
-      }
-    })
+    if (!startDrag(event, cardElementsToDrag)) return
 
-    startDrag(event, cardElementsToDrag)
+    dragging.value = { cards: stackedCards, from }
   }
 
   // Main drop handler — returns true if the move was successfully executed

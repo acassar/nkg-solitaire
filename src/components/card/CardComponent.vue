@@ -10,7 +10,6 @@ const emit = defineEmits<{
   (e: 'click'): void
   (e: 'dragStart', event: PointerEvent): void
   (e: 'drop'): void
-  (e: 'dblClick'): void
 }>()
 const elementRef = ref<HTMLElement | null>(null)
 
@@ -78,7 +77,6 @@ watch(
     ]"
     :style="{ zIndex: beingDragged ? 1000 : zIndex }"
     @click="canBeClicked ? $emit('click') : null"
-    @dblclick="canBeDragged ? $emit('dblClick') : null"
     @pointerdown="onPointerDown"
   >
     <template v-if="card.faceUp">
