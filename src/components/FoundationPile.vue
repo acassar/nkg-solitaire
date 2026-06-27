@@ -113,6 +113,6 @@ onBeforeUnmount(() => {
 }
 
 .card-container:not(:first-child) {
-  margin-top: -80px;
+  margin-top: calc(-1 * var(--card-height) + var(--card-fan));
 }
 </style>

@@ -114,7 +114,7 @@ const handleLastCardDrawn = () => {
 }
 
 .card-container:not(:first-child) {
-  margin-top: -70px;
+  margin-top: calc(-1 * var(--card-height) + var(--card-fan));
 }
 
 .card:hover {

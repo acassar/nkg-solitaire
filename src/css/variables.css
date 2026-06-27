@@ -1,7 +1,10 @@
 :root {
   --card-width: 60px;
   --card-height: 90px;
-  --card-overlap: 70px;
+  /* Tableau: each card peeks out 12px below the previous */
+  --card-overlap: calc(var(--card-height) - 12px);
+  /* Stock/discard/foundation fan: small offset to hint at depth */
+  --card-fan: 5px;
 }
 
 /* Mobile: scale cards to fill viewport width across 7 tableau columns.
@@ -10,6 +13,9 @@
   :root {
     --card-width: calc((100vw - 6rem) / 7);
     --card-height: calc(var(--card-width) * 1.5);
-    --card-overlap: var(--card-width);
+    /* Tableau: 8px visible per card on mobile */
+    --card-overlap: calc(var(--card-height) - 8px);
+    /* Fan: ultra-thin on mobile */
+    --card-fan: 2px;
   }
 }
